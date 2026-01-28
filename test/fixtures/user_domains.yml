@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  domain: one
+  level: 1
+  setup_completed: false
+  quiz_responses: 
+  ai_assessment: MyText
+
+two:
+  user: two
+  domain: two
+  level: 1
+  setup_completed: false
+  quiz_responses: 
+  ai_assessment: MyText
