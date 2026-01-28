@@ -1,24 +1,16 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Personal Life LMS - track progress across 8 life domains, complete missions, level up.
 
-Things you may want to cover:
+  ## Setup
+  bundle install
+  rails db:create db:migrate db:seed
+  rails server
 
-* Ruby version
+  ## Stack
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+  - Ruby 3.3.7
+  - Rails 8.1.2
+  - PostgreSQL
+  - Tailwind CSS
+  - Hotwire (Turbo + Stimulus)
