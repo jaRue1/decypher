@@ -1,9 +1,66 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+Domain.destroy_all
+
+  domains = [
+    {
+      name: "Career",
+      slug: "career",
+      description: "Professional growth, work, income",
+      icon: "briefcase",
+      level_titles: { 1 => "Junior", 2 => "Mid", 3 => "Senior", 4 => "Lead", 5 => "Staff", 6 => "Principal" }
+    },
+    {
+      name: "Health & Fitness",
+      slug: "health-fitness",
+      description: "Physical body, exercise, nutrition",
+      icon: "heart",
+      level_titles: { 1 => "Rookie", 2 => "Beginner", 3 => "Intermediate", 4 => "Advanced", 5 => "Elite", 6 => "Apex" }
+    },
+    {
+      name: "Mental Health",
+      slug: "mental-health",
+      description: "Psychological wellbeing, mindfulness, emotional intelligence",
+      icon: "brain",
+      level_titles: { 1 => "Awakening", 2 => "Aware", 3 => "Balanced", 4 => "Grounded", 5 => "Resilient", 6 => "Thriving" }
+    },
+    {
+      name: "Finance & Wealth",
+      slug: "finance",
+      description: "Money management, savings, investments",
+      icon: "dollar",
+      level_titles: { 1 => "Surviving", 2 => "Stable", 3 => "Building", 4 => "Growing", 5 => "Prospering", 6 => "Abundant" }
+    },
+    {
+      name: "Relationships",
+      slug: "relationships",
+      description: "Family, friends, romantic, social connections",
+      icon: "users",
+      level_titles: { 1 => "Distant", 2 => "Reaching", 3 => "Connected", 4 => "Bonded", 5 => "Nurturing", 6 => "Pillar" }
+    },
+    {
+      name: "Education & Learning",
+      slug: "education",
+      description: "Knowledge acquisition, formal and informal",
+      icon: "book",
+      level_titles: { 1 => "Novice", 2 => "Learner", 3 => "Studied", 4 => "Skilled", 5 => "Expert", 6 => "Master" }
+    },
+    {
+      name: "Hobbies & Recreation",
+      slug: "hobbies",
+      description: "Fun, creative pursuits, leisure activities",
+      icon: "palette",
+      level_titles: { 1 => "Dabbler", 2 => "Casual", 3 => "Committed", 4 => "Enthusiast", 5 => "Devoted", 6 => "Virtuoso" }
+    },
+    {
+      name: "Adventure & Experiences",
+      slug: "adventure",
+      description: "Travel, bucket list, new experiences",
+      icon: "compass",
+      level_titles: { 1 => "Homebody", 2 => "Curious", 3 => "Explorer", 4 => "Adventurer", 5 => "Voyager", 6 => "Legendary" }
+    }
+  ]
+
+  domains.each do |domain_data|
+    Domain.create!(domain_data)
+  end
+
+  puts "Created #{Domain.count} domains"
