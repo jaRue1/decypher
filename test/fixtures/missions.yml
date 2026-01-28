@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  domain: one
+  title: MyString
+  description: MyText
+  target_level: 1
+  status: MyString
+  ai_generated: false
+  completed_at: 2026-01-28 18:06:59
+
+two:
+  user: two
+  domain: two
+  title: MyString
+  description: MyText
+  target_level: 1
+  status: MyString
+  ai_generated: false
+  completed_at: 2026-01-28 18:06:59

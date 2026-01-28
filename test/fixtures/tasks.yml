@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mission: one
+  description: MyString
+  skill_name: MyString
+  status: MyString
+  completion_proof: MyText
+  started_at: 2026-01-28 18:07:21
+  completed_at: 2026-01-28 18:07:21
+  position: 1
+
+two:
+  mission: two
+  description: MyString
+  skill_name: MyString
+  status: MyString
+  completion_proof: MyText
+  started_at: 2026-01-28 18:07:21
+  completed_at: 2026-01-28 18:07:21
+  position: 1
