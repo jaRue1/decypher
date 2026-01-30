@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get "domains/show"
   get "registrations/new"
   get "registrations/create"
   get "sign_up", to: "registrations#new"
@@ -12,6 +11,9 @@ Rails.application.routes.draw do
       get :setup
       post :complete_setup
     end
+  end
+  resources :missions do
+    resources :tasks, only: [:create, :update, :destroy]
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
