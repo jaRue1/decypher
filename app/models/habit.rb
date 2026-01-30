@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Habit < ApplicationRecord
   belongs_to :user
   belongs_to :domain, optional: true

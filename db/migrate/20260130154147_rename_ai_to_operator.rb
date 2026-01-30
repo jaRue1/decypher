@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameAiToOperator < ActiveRecord::Migration[8.1]
   def change
     rename_column :missions, :ai_generated, :operator_generated

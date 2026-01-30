@@ -16,6 +16,13 @@
     <nav class="flex-1 p-4 space-y-2">
       <span class="font-mono text-xs uppercase tracking-widest text-slate-500 px-3 block mb-4">Navigation</span>
 
+       <%= link_to profile_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors group #{'bg-slate-800 text-blue-400' if request.path == '/profile'}" do %>
+        <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
+        <span class="font-mono text-sm text-slate-300 group-hover:text-slate-100">Profile</span>
+      <% end %>
+      
       <%= link_to root_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors group #{'bg-slate-800
    text-blue-400' if current_page?(root_path)}" do %>
         <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,12 +54,7 @@
         <span class="font-mono text-sm text-slate-300 group-hover:text-slate-100">Habits</span>
       <% end %>
 
-      <%= link_to profile_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors group #{'bg-slate-800 text-blue-400' if request.path == '/profile'}" do %>
-        <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-        </svg>
-        <span class="font-mono text-sm text-slate-300 group-hover:text-slate-100">Profile</span>
-      <% end %>
+   
     </nav>
 
     <!-- User -->

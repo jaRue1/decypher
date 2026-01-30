@@ -1,21 +1,33 @@
-class HabitsController < ApplicationController
-  before_action :set_habit, only: [:show, :edit, :update, :destroy, :toggle]
+# frozen_string_literal: true
 
-  def show
-    redirect_to edit_habit_path(@habit)
-  end
+class HabitsController < ApplicationController
+  before_action :set_habit, only: %i[show edit update destroy toggle]
 
   def index
     @date = params[:date]&.to_date || Date.current
     @habits = Current.user.habits.active.ordered.includes(:habit_logs)
-    @month_dates = (@date.beginning_of_month..@date.end_of_month).to_a
+    @month_dates = @date.all_month.to_a
     @stats = Current.user.monthly_habit_stats(@date)
 
     # Preload habit logs for the month for performance
     @habit_logs = HabitLog.joins(:habit)
                           .where(habits: { user_id: Current.user.id })
-                          .where(date: @date.beginning_of_month..@date.end_of_month)
+                          .where(date: @date.all_month)
                           .index_by { |log| [log.habit_id, log.date] }
+
+    # Prepare chart data (only for days up to today)
+    @chart_dates = @month_dates.select { |d| d <= Date.current }
+    @chart_labels = @chart_dates.map { |d| d.day.to_s }
+    @chart_data = @chart_dates.map do |date|
+      next 0 if @habits.empty?
+
+      completed = @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
+      (completed.to_f / @habits.count * 100).round(0)
+    end
+  end
+
+  def show
+    redirect_to edit_habit_path(@habit)
   end
 
   def new
@@ -23,33 +35,33 @@ class HabitsController < ApplicationController
     @domains = Domain.ordered
   end
 
-  def create
-    @habit = Current.user.habits.build(habit_params)
-
-    if @habit.save
-      redirect_to habits_path, notice: "Habit created."
-    else
-      @domains = Domain.ordered
-      render :new, status: :unprocessable_entity
-    end
-  end
-
   def edit
     @domains = Domain.ordered
   end
 
-  def update
-    if @habit.update(habit_params)
-      redirect_to habits_path, notice: "Habit updated."
+  def create
+    @habit = Current.user.habits.build(habit_params)
+
+    if @habit.save
+      redirect_to habits_path, notice: 'Habit created.'
     else
       @domains = Domain.ordered
-      render :edit, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
+    end
+  end
+
+  def update
+    if @habit.update(habit_params)
+      redirect_to habits_path, notice: 'Habit updated.'
+    else
+      @domains = Domain.ordered
+      render :edit, status: :unprocessable_content
     end
   end
 
   def destroy
     @habit.destroy
-    redirect_to habits_path, notice: "Habit deleted."
+    redirect_to habits_path, notice: 'Habit deleted.'
   end
 
   def toggle
@@ -70,6 +82,7 @@ class HabitsController < ApplicationController
   end
 
   def habit_params
-    params.require(:habit).permit(:name, :icon, :color, :domain_id, :target_days_per_week, :target_days_per_month, :active)
+    params.expect(habit: %i[name icon color domain_id target_days_per_week target_days_per_month
+                            active])
   end
 end

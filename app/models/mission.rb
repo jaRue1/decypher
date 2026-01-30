@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mission < ApplicationRecord
   belongs_to :user
   belongs_to :domain
@@ -10,10 +12,10 @@ class Mission < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }, allow_nil: true
   validates :grade, inclusion: { in: GRADES }, allow_nil: true
 
-  scope :standby, -> { where(status: "standby") }
-  scope :active, -> { where(status: "active") }
-  scope :completed, -> { where(status: "completed") }
-  scope :aborted, -> { where(status: "aborted") }
+  scope :standby, -> { where(status: 'standby') }
+  scope :active, -> { where(status: 'active') }
+  scope :completed, -> { where(status: 'completed') }
+  scope :aborted, -> { where(status: 'aborted') }
   scope :for_domain, ->(domain) { where(domain: domain) }
 
   # Commence (start or resume) the mission
@@ -22,26 +24,26 @@ class Mission < ApplicationRecord
 
     # Only set started_at on first commence
     if started_at.nil?
-      update!(status: "active", started_at: Time.current)
+      update!(status: 'active', started_at: Time.current)
     else
-      update!(status: "active")
+      update!(status: 'active')
     end
   end
 
   # Abort the mission
   def abort!
-    return false unless status == "active"
+    return false unless status == 'active'
 
-    update!(status: "aborted")
+    update!(status: 'aborted')
   end
 
   # Complete the mission
   def complete!
-    return false unless status == "active"
+    return false unless status == 'active'
     return false unless all_objectives_completed?
 
     transaction do
-      update!(status: "completed", completed_at: Time.current)
+      update!(status: 'completed', completed_at: Time.current)
 
       # Award XP to user domain
       user_domain = user.user_domains.find_by(domain: domain)
@@ -49,7 +51,7 @@ class Mission < ApplicationRecord
 
       # Record achievement (only if not already recorded)
       user.achievements.find_or_create_by!(
-        achievement_type: "mission_completed",
+        achievement_type: 'mission_completed',
         achievable: self
       ) do |achievement|
         achievement.metadata = { title: title, grade: grade, xp_earned: total_xp }
@@ -68,7 +70,7 @@ class Mission < ApplicationRecord
 
   # Check if all objectives are completed
   def all_objectives_completed?
-    objectives.any? && objectives.all? { |o| o.completed? }
+    objectives.any? && objectives.all?(&:completed?)
   end
 
   # Calculate total XP for this mission
@@ -79,12 +81,14 @@ class Mission < ApplicationRecord
   # Calculate completion percentage
   def completion_percentage
     return 0 if objectives.empty?
+
     ((objectives.completed.count.to_f / objectives.count) * 100).round
   end
 
   # Time spent on mission
   def duration
     return nil unless started_at
+
     end_time = completed_at || Time.current
     end_time - started_at
   end

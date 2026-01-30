@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Domain < ApplicationRecord
   has_many :user_domains, dependent: :destroy
   has_many :users, through: :user_domains

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateUserDomains < ActiveRecord::Migration[8.1]
   def change
     create_table :user_domains do |t|

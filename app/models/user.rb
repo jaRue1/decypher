@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
@@ -52,7 +54,7 @@ class User < ApplicationRecord
       total_habits: active_habits.count,
       completed_count: total_completed,
       total_possible: total_possible,
-      percentage: total_possible > 0 ? (total_completed.to_f / total_possible * 100).round(2) : 0
+      percentage: total_possible.positive? ? (total_completed.to_f / total_possible * 100).round(2) : 0
     }
   end
 end

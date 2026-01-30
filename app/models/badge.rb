@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Badge < ApplicationRecord
   belongs_to :mission
 
@@ -5,6 +7,6 @@ class Badge < ApplicationRecord
 
   # Check if badge is earned (mission completed)
   def earned?
-    mission.status == "completed"
+    mission.status == 'completed'
   end
 end

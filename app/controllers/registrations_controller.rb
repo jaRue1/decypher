@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RegistrationsController < ApplicationController
   allow_unauthenticated_access
 
@@ -11,13 +13,13 @@ class RegistrationsController < ApplicationController
       start_new_session_for(@user)
       redirect_to root_path, notice: 'Welcome to Decypher !'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
-  private 
+  private
 
   def user_params
-    params.require(:user).permit(:email_address, :password, :password_confirmation)
+    params.expect(user: %i[email_address password password_confirmation])
   end
 end

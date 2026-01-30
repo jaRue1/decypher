@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateAchievements < ActiveRecord::Migration[8.1]
   def change
     create_table :achievements do |t|
@@ -10,7 +12,7 @@ class CreateAchievements < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :achievements, [:user_id, :achievement_type, :achievable_type, :achievable_id],
-              name: "index_achievements_uniqueness", unique: true
+    add_index :achievements, %i[user_id achievement_type achievable_type achievable_id],
+              name: 'index_achievements_uniqueness', unique: true
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HabitLog < ApplicationRecord
   belongs_to :habit
 
@@ -6,5 +8,5 @@ class HabitLog < ApplicationRecord
 
   scope :completed, -> { where(completed: true) }
   scope :for_date, ->(date) { where(date: date) }
-  scope :for_month, ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
+  scope :for_month, ->(date) { where(date: date.all_month) }
 end

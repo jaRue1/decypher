@@ -158,6 +158,20 @@
           </div>
         </div>
 
+        <!-- Trend Chart -->
+        <% if @chart_data.any? %>
+          <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+            <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Daily Trend</h3>
+            <div class="h-40">
+              <canvas
+                data-controller="habit-chart"
+                data-habit-chart-labels-value="<%= @chart_labels.to_json %>"
+                data-habit-chart-data-value="<%= @chart_data.to_json %>"
+              ></canvas>
+            </div>
+          </div>
+        <% end %>
+
         <!-- Habit Goals -->
         <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
           <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Goal vs Actual</h3>

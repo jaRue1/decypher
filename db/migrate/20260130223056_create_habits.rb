@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateHabits < ActiveRecord::Migration[8.1]
   def change
     create_table :habits do |t|
@@ -14,7 +16,7 @@ class CreateHabits < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :habits, [:user_id, :active]
-    add_index :habits, [:user_id, :position]
+    add_index :habits, %i[user_id active]
+    add_index :habits, %i[user_id position]
   end
 end
