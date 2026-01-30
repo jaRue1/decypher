@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_30_152917) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_30_154147) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,11 +42,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_152917) do
   end
 
   create_table "missions", force: :cascade do |t|
-    t.boolean "ai_generated"
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.text "description"
     t.bigint "domain_id", null: false
+    t.boolean "operator_generated"
     t.string "status"
     t.integer "target_level"
     t.string "title"
@@ -93,10 +93,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_152917) do
   end
 
   create_table "user_domains", force: :cascade do |t|
-    t.text "ai_assessment"
     t.datetime "created_at", null: false
     t.bigint "domain_id", null: false
     t.integer "level"
+    t.text "operator_assessment"
     t.jsonb "quiz_responses"
     t.boolean "setup_completed"
     t.datetime "updated_at", null: false
