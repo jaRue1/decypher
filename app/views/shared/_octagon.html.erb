@@ -1,6 +1,6 @@
 <%
     domain_count = domains.size
-  %>
+%>
 
   <% if domain_count > 0 %>
     <%
@@ -42,7 +42,6 @@
       }
     %>
 
-
     <svg viewBox="0 0 400 400" class="w-full h-full">
       <!-- Grid lines (6 levels) -->
       <% 6.times do |level| %>
@@ -54,8 +53,7 @@
           points="<%= grid_points.map { |p| p.join(',') }.join(' ') %>"
           fill="none"
           stroke="rgba(59, 130, 246, 0.2)"
-          stroke-width="1"
-        />
+          stroke-width="1" />
       <% end %>
 
       <!-- Axis lines -->
@@ -78,8 +76,7 @@
         points="<%= level_points.join(' ') %>"
         fill="rgba(59, 130, 246, 0.3)"
         stroke="rgb(59, 130, 246)"
-        stroke-width="2"
-      />
+        stroke-width="2" />
 
       <!-- Domain labels -->
       <% domains.each_with_index do |domain, i| %>

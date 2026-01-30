@@ -66,7 +66,8 @@
           </div>
           <% if user_domain %>
             <div class="font-mono text-lg text-slate-100 mb-1 group-hover:text-blue-400 transition-colors"><%=
-             domain.level_titles[user_domain.level.to_s] %></div>
+             domain.level_titles[user_domain.level.to_s]
+                                                                                                           %></div>
             <div class="h-1 bg-slate-800 rounded-full overflow-hidden mt-3">
               <div class="h-full bg-blue-500" style="width: <%= (user_domain.level / 6.0 * 100).round %>%"></div>
             </div>
