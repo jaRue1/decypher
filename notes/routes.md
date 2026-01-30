@@ -53,3 +53,19 @@
   rails routes              # show all routes
   rails routes -c missions  # show routes for missions controller only
   rails routes -g user      # grep routes containing "user"
+
+
+  # Full CRUD (7 routes)
+  resources :posts
+
+  # Limited routes
+  resources :domains, only: [:index, :show]
+  resources :profiles, only: [:show, :edit, :update]
+  resources :sessions, only: [:new, :create, :destroy]
+
+  # Custom URL parameter
+  resources :domains, param: :slug    # /domains/:slug
+  resources :passwords, param: :token # /passwords/:token
+
+  # Combine options
+  resources :domains, only: [:show], param: :slug

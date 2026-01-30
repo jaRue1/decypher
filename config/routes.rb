@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "domains/show"
   get "registrations/new"
   get "registrations/create"
   get "sign_up", to: "registrations#new"
@@ -6,6 +7,7 @@ Rails.application.routes.draw do
   get "dashboard/index"
   resource :session
   resources :passwords, param: :token
+  resources :domains, only: [:index, :show], param: :slug
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

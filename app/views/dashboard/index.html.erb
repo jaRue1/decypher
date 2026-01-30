@@ -7,13 +7,14 @@
     <h2 class="font-mono text-lg text-slate-100 mb-4">Domains</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <% @domains.each do |domain| %>
-        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-blue-500 transition-colors cursor-pointer">
-          <div class="flex items-center justify-between mb-3">
-            <span class="font-mono text-xs uppercase tracking-widest text-slate-400"><%= domain.name %></span>
-          </div>
-          <div class="text-sm text-slate-400">Not set up</div>
-        </div>
-      <% end %>
+  <% @domains.each do |domain| %>
+    <%= link_to domain_path(domain.slug), class: "bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-blue-500
+  transition-colors block" do %>
+      <div class="flex items-center justify-between mb-3">
+        <span class="font-mono text-xs uppercase tracking-widest text-slate-400"><%= domain.name %></span>
+      </div>
+      <div class="text-sm text-slate-400">Not set up</div>
+    <% end %>
+  <% end %>
     </div>
   </div>
