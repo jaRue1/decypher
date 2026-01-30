@@ -1,0 +1,108 @@
+<%
+    domain_count = domains.size
+  %>
+
+  <% if domain_count > 0 %>
+    <%
+      # SVG center and sizing - wider viewBox for labels
+      cx, cy = 200, 200
+      max_radius = 100
+      label_radius = 140
+
+      # Lambda to get point at angle and radius
+      point_at = ->(radius, index) {
+        angle = (index * 360.0 / domain_count - 90) * Math::PI / 180
+        x = cx + radius * Math.cos(angle)
+        y = cy + radius * Math.sin(angle)
+        [x.round(1), y.round(1)]
+      }
+
+      # Text anchor based on position around circle
+     anchor_for = ->(index) {
+    angle = index * 360.0 / domain_count
+    # Top and bottom should be centered
+    if angle <= 22.5 || angle >= 337.5 || (angle >= 157.5 && angle <= 202.5)
+      "middle"
+    elsif angle < 180
+      "start"
+    else
+      "end"
+    end
+  }
+
+      dy_for = ->(index) {
+        angle = index * 360.0 / domain_count
+        if angle < 45 || angle > 315
+          -8
+        elsif (angle > 135 && angle < 225)
+          16
+        else
+          4
+        end
+      }
+    %>
+
+
+    <svg viewBox="0 0 400 400" class="w-full h-full">
+      <!-- Grid lines (6 levels) -->
+      <% 6.times do |level| %>
+        <%
+          radius = max_radius * (level + 1) / 6.0
+          grid_points = domain_count.times.map { |i| point_at.call(radius, i) }
+        %>
+        <polygon
+          points="<%= grid_points.map { |p| p.join(',') }.join(' ') %>"
+          fill="none"
+          stroke="rgba(59, 130, 246, 0.2)"
+          stroke-width="1"
+        />
+      <% end %>
+
+      <!-- Axis lines -->
+      <% domain_count.times do |i| %>
+        <% x, y = point_at.call(max_radius, i) %>
+        <line x1="<%= cx %>" y1="<%= cy %>" x2="<%= x %>" y2="<%= y %>"
+              stroke="rgba(59, 130, 246, 0.3)" stroke-width="1" />
+      <% end %>
+
+      <!-- Filled area based on user levels -->
+      <%
+        level_points = domains.each_with_index.map do |domain, i|
+          user_domain = user_domains[domain.id]
+          level = user_domain&.level || 0
+          radius = max_radius * level / 6.0
+          point_at.call(radius, i).join(',')
+        end
+      %>
+      <polygon
+        points="<%= level_points.join(' ') %>"
+        fill="rgba(59, 130, 246, 0.3)"
+        stroke="rgb(59, 130, 246)"
+        stroke-width="2"
+      />
+
+      <!-- Domain labels -->
+      <% domains.each_with_index do |domain, i| %>
+        <%
+          x, y = point_at.call(label_radius, i)
+          anchor = anchor_for.call(i)
+          dy = dy_for.call(i)
+        %>
+        <text x="<%= x %>" y="<%= y %>" dy="<%= dy %>"
+              text-anchor="<%= anchor %>"
+              class="fill-slate-400 text-xs font-mono">
+          <%= domain.name.split.first %>
+        </text>
+      <% end %>
+
+      <!-- Center power level -->
+      <text x="<%= cx %>" y="<%= cy - 5 %>" text-anchor="middle"
+            class="fill-blue-400 text-4xl font-bold font-mono">
+        <%= power_level %>
+      </text>
+      <text x="<%= cx %>" y="<%= cy + 20 %>" text-anchor="middle"
+            class="fill-slate-500 text-xs font-mono tracking-widest">
+        POWER
+      </text>
+    </svg>
+  <% end %>
