@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="html">
+
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <title><%= content_for(:title) || "Decypher" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -23,9 +26,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
       <%= yield %>
-    </main>
-  </body>
+    </body>
 </html>

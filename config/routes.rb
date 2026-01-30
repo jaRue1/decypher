@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "registrations/new"
+  get "registrations/create"
+  get "sign_up", to: "registrations#new"
+  post "sign_up", to: "registrations#create"
   get "dashboard/index"
   resource :session
   resources :passwords, param: :token
