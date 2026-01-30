@@ -2,7 +2,7 @@ class MissionsController < ApplicationController
   before_action :set_mission, only: [:show, :edit, :update, :destroy]
   
   def index
-    @missions = Current.user.missions.includes(:domain, :tasks)
+    @missions = Current.user.missions.includes(:domain, :objectives)
   end
 
   def show

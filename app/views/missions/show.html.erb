@@ -34,30 +34,30 @@
       </div>
     </div>
 
-    <!-- Tasks Section -->
+    <!-- Objectives Section -->
     <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="font-mono text-xs uppercase tracking-widest text-slate-500">Tasks</h2>
+        <h2 class="font-mono text-xs uppercase tracking-widest text-slate-500">Objectives</h2>
         <span class="font-mono text-xs text-slate-500">
-          <%= @mission.tasks.where.not(completed_at: nil).count %>/<%= @mission.tasks.count %> complete
+          <%= @mission.objectives.where.not(completed_at: nil).count %>/<%= @mission.objectives.count %> complete
         </span>
       </div>
 
-      <% if @mission.tasks.any? %>
+      <% if @mission.objectives.any? %>
         <div class="space-y-2">
-          <% @mission.tasks.order(:position).each do |task| %>
+          <% @mission.objectives.order(:position).each do |objective| %>
             <div class="flex items-center gap-3 p-3 bg-slate-800 rounded">
-              <% if task.completed_at %>
+              <% if objective.completed_at %>
                 <span class="w-5 h-5 rounded border border-emerald-500 bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs">✓</span>
               <% else %>
                 <span class="w-5 h-5 rounded border border-slate-600"></span>
               <% end %>
-              <span class="text-slate-300 flex-1 <%= task.completed_at ? 'line-through text-slate-500' : '' %>"><%= task.description %></span>
+              <span class="text-slate-300 flex-1 <%= objective.completed_at ? 'line-through text-slate-500' : '' %>"><%= objective.description %></span>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="text-slate-500 font-mono text-sm">No tasks yet. Tasks will be added when AI generates the mission plan.</p>
+        <p class="text-slate-500 font-mono text-sm">No objectives yet. Objectives will be added when AI generates the mission plan.</p>
       <% end %>
     </div>
   </div>

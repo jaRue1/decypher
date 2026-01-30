@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  domain: one
+  content: MyText
+  goal_type: MyString
+  timeframe: MyString
+  status: MyString
+
+two:
+  user: two
+  domain: two
+  content: MyText
+  goal_type: MyString
+  timeframe: MyString
+  status: MyString

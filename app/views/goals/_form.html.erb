@@ -1,0 +1,39 @@
+<%= form_with model: goal, class: "space-y-6" do |f| %>
+  <% if goal.errors.any? %>
+    <div class="bg-red-900/20 border border-red-800 rounded-lg p-4">
+      <p class="text-red-400 font-mono text-sm"><%= pluralize(goal.errors.count, "error") %> prevented saving:</p>
+      <ul class="mt-2 text-red-300 text-sm list-disc list-inside">
+        <% goal.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :domain_id, "Domain (optional)", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
+    <%= f.collection_select :domain_id, domains, :id, :name, { include_blank: "General (no specific domain)" }, { class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500" } %>
+  </div>
+
+  <div>
+    <%= f.label :content, "What's your goal?", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
+    <%= f.text_area :content, rows: 4, class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500", placeholder: "Describe your goal in detail. Be specific about what you want to achieve..." %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= f.label :goal_type, "Type", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
+      <%= f.select :goal_type, [["Career", "career"], ["Financial", "financial"], ["Personal", "personal"], ["Health", "health"], ["Learning", "learning"], ["Other", "other"]], { include_blank: "Select type" }, { class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500" } %>
+    </div>
+
+    <div>
+      <%= f.label :timeframe, "Timeframe", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
+      <%= f.select :timeframe, [["Short-term (< 3 months)", "short_term"], ["Medium-term (3-12 months)", "medium_term"], ["Long-term (1+ years)", "long_term"]], { include_blank: "Select timeframe" }, { class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500" } %>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <%= f.submit class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-6 py-3 rounded transition-colors cursor-pointer" %>
+    <%= link_to "Cancel", goals_path, class: "text-slate-400 hover:text-white font-mono text-sm px-4 py-3" %>
+  </div>
+<% end %>

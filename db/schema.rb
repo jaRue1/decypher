@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_30_043901) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_30_152917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_043901) do
     t.index ["slug"], name: "index_domains_on_slug", unique: true
   end
 
+  create_table "goals", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.bigint "domain_id"
+    t.string "goal_type"
+    t.string "status"
+    t.string "timeframe"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["domain_id"], name: "index_goals_on_domain_id"
+    t.index ["user_id"], name: "index_goals_on_user_id"
+  end
+
   create_table "missions", force: :cascade do |t|
     t.boolean "ai_generated"
     t.datetime "completed_at"
@@ -41,6 +54,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_043901) do
     t.bigint "user_id", null: false
     t.index ["domain_id"], name: "index_missions_on_domain_id"
     t.index ["user_id"], name: "index_missions_on_user_id"
+  end
+
+  create_table "objectives", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.text "completion_proof"
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.bigint "mission_id", null: false
+    t.integer "position"
+    t.string "skill_name"
+    t.datetime "started_at"
+    t.string "status"
+    t.datetime "updated_at", null: false
+    t.index ["mission_id"], name: "index_objectives_on_mission_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -57,26 +84,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_043901) do
     t.datetime "created_at", null: false
     t.bigint "domain_id", null: false
     t.string "name"
-    t.bigint "task_id", null: false
+    t.bigint "objective_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["domain_id"], name: "index_skills_on_domain_id"
-    t.index ["task_id"], name: "index_skills_on_task_id"
+    t.index ["objective_id"], name: "index_skills_on_objective_id"
     t.index ["user_id"], name: "index_skills_on_user_id"
-  end
-
-  create_table "tasks", force: :cascade do |t|
-    t.datetime "completed_at"
-    t.text "completion_proof"
-    t.datetime "created_at", null: false
-    t.string "description"
-    t.bigint "mission_id", null: false
-    t.integer "position"
-    t.string "skill_name"
-    t.datetime "started_at"
-    t.string "status"
-    t.datetime "updated_at", null: false
-    t.index ["mission_id"], name: "index_tasks_on_mission_id"
   end
 
   create_table "user_domains", force: :cascade do |t|
@@ -100,13 +113,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_043901) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "goals", "domains"
+  add_foreign_key "goals", "users"
   add_foreign_key "missions", "domains"
   add_foreign_key "missions", "users"
+  add_foreign_key "objectives", "missions"
   add_foreign_key "sessions", "users"
   add_foreign_key "skills", "domains"
-  add_foreign_key "skills", "tasks"
+  add_foreign_key "skills", "objectives"
   add_foreign_key "skills", "users"
-  add_foreign_key "tasks", "missions"
   add_foreign_key "user_domains", "domains"
   add_foreign_key "user_domains", "users"
 end

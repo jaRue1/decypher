@@ -1,0 +1,49 @@
+<div class="p-8">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-1">Goal Registry</h1>
+      <p class="font-mono text-2xl text-slate-100">Your Goals</p>
+    </div>
+    <%= link_to new_goal_path, class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-4 py-2 rounded transition-colors" do %>
+      + New Goal
+    <% end %>
+  </div>
+
+  <% if @goals.any? %>
+    <div class="space-y-4">
+      <% @goals.group_by(&:domain).each do |domain, goals| %>
+        <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+          <h2 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">
+            <%= domain&.name || "General" %>
+          </h2>
+          <div class="space-y-3">
+            <% goals.each do |goal| %>
+              <div class="flex items-start justify-between p-4 bg-slate-800 rounded">
+                <div class="flex-1">
+                  <p class="text-slate-100"><%= goal.content %></p>
+                  <div class="flex items-center gap-3 mt-2">
+                    <% if goal.goal_type.present? %>
+                      <span class="font-mono text-xs text-slate-500"><%= goal.goal_type %></span>
+                    <% end %>
+                    <% if goal.timeframe.present? %>
+                      <span class="font-mono text-xs text-slate-500"><%= goal.timeframe %></span>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 ml-4">
+                  <%= link_to "Edit", edit_goal_path(goal), class: "font-mono text-xs text-slate-400 hover:text-white" %>
+                  <%= button_to "Delete", goal_path(goal), method: :delete, data: { turbo_confirm: "Delete this goal?" }, class: "font-mono text-xs text-red-400 hover:text-red-300" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-slate-900 border border-slate-700 rounded-lg p-12 text-center">
+      <p class="text-slate-500 font-mono mb-4">No goals yet</p>
+      <%= link_to "Set your first goal", new_goal_path, class: "text-blue-400 hover:text-blue-300 font-mono" %>
+    </div>
+  <% end %>
+</div>

@@ -24,8 +24,8 @@
             </div>
             <p class="text-slate-400 text-sm mb-4"><%= truncate(mission.description, length: 120) %></p>
             <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
-              <span><%= mission.tasks.count %> tasks</span>
-              <span><%= mission.tasks.where.not(completed_at: nil).count %> completed</span>
+              <span><%= mission.objectives.count %> objectives</span>
+              <span><%= mission.objectives.where.not(completed_at: nil).count %> completed</span>
             </div>
           <% end %>
         <% end %>
