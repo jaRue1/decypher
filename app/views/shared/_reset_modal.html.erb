@@ -1,0 +1,18 @@
+<div data-confirm-target="modal"
+     data-action="keydown@window->confirm#closeOnEscape click->confirm#closeOnBackdrop"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+  <div class="bg-slate-900 border border-red-700 rounded-lg p-6 max-w-md w-full mx-4">
+    <h3 class="font-mono text-lg text-slate-100 mb-2">Reset <%= domain.name %>?</h3>
+    <p class="text-slate-400 text-sm mb-6">This will clear all your progress in this domain including level, XP, and grade. You'll need to set up the domain again. This cannot be undone.</p>
+    <div class="flex items-center justify-end gap-3">
+      <button data-action="click->confirm#close"
+              class="font-mono text-sm text-slate-400 hover:text-white px-4 py-2 border border-slate-700 rounded hover:border-slate-500 transition-colors">
+        Cancel
+      </button>
+      <button data-action="click->confirm#confirm"
+              class="font-mono text-sm text-white bg-red-600 hover:bg-red-500 px-4 py-2 rounded transition-colors">
+        Reset Domain
+      </button>
+    </div>
+  </div>
+</div>

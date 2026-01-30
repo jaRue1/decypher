@@ -8,13 +8,13 @@
 
 ERB is the templating language. HTML with Ruby embedded:
 
-```erb
+```ruby
 <%= expression %>   ← Outputs the result (prints to HTML)
 <% code %>          ← Executes code but doesn't output
 ```
 
 **Example:**
-```erb
+```ruby
 <%= @mission.title %>                    ← Outputs: "Learn Ruby"
 <% if @mission.status == "active" %>     ← Logic only, no output
   <span>Active</span>
@@ -44,7 +44,7 @@ app/views/missions/
 ```
 
 **Rendering a partial:**
-```erb
+```ruby
 <%= render "mission_card", mission: @mission %>
            ↑ filename       ↑ local variable
            (without _)
@@ -59,7 +59,7 @@ app/views/missions/
 
 ## Passing Data to Partials (Locals)
 
-```erb
+```ruby
 <!-- In index.html.erb -->
 <%= render "mission_card", mission: mission, show_actions: true %>
 
@@ -96,7 +96,7 @@ def show
 end
 ```
 
-```erb
+```ruby
 <!-- View automatically has access -->
 <h1><%= @mission.title %></h1>
 <% @objectives.each do |objective| %>
@@ -112,7 +112,7 @@ end
 
 Rails generates forms with CSRF protection built-in:
 
-```erb
+```ruby
 <%= form_with model: @mission do |f| %>
   <%= f.label :title %>
   <%= f.text_field :title, class: "input-class" %>
@@ -133,7 +133,7 @@ Rails generates forms with CSRF protection built-in:
 ```
 
 **Nested resource forms:**
-```erb
+```ruby
 <%= form_with model: [@mission, Objective.new] do |f| %>
   <!-- Creates form for /missions/:mission_id/objectives -->
 <% end %>
@@ -143,7 +143,7 @@ Rails generates forms with CSRF protection built-in:
 
 ## Link & Button Helpers
 
-```erb
+```ruby
 <!-- Links (GET requests) -->
 <%= link_to "View", mission_path(@mission) %>
 <%= link_to "View", @mission %>                    ← Shorthand
@@ -212,7 +212,7 @@ module MissionsHelper
 end
 ```
 
-```erb
+```ruby
 <!-- Use directly in any view -->
 <span class="<%= status_color(@mission.status) %>">
   <%= @mission.status %>
@@ -223,7 +223,7 @@ end
 
 ## Loops and Conditionals
 
-```erb
+```ruby
 <!-- Loop -->
 <% @missions.each do |mission| %>
   <div><%= mission.title %></div>

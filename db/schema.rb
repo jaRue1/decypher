@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_30_161226) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_30_223057) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -63,6 +63,36 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_161226) do
     t.bigint "user_id", null: false
     t.index ["domain_id"], name: "index_goals_on_domain_id"
     t.index ["user_id"], name: "index_goals_on_user_id"
+  end
+
+  create_table "habit_logs", force: :cascade do |t|
+    t.boolean "completed", default: false
+    t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.bigint "habit_id", null: false
+    t.text "notes"
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_habit_logs_on_date"
+    t.index ["habit_id", "date"], name: "index_habit_logs_on_habit_id_and_date", unique: true
+    t.index ["habit_id"], name: "index_habit_logs_on_habit_id"
+  end
+
+  create_table "habits", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.bigint "domain_id"
+    t.string "icon"
+    t.string "name", null: false
+    t.integer "position"
+    t.integer "target_days_per_month", default: 30
+    t.integer "target_days_per_week", default: 7
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["domain_id"], name: "index_habits_on_domain_id"
+    t.index ["user_id", "active"], name: "index_habits_on_user_id_and_active"
+    t.index ["user_id", "position"], name: "index_habits_on_user_id_and_position"
+    t.index ["user_id"], name: "index_habits_on_user_id"
   end
 
   create_table "missions", force: :cascade do |t|
@@ -150,6 +180,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_161226) do
   add_foreign_key "badges", "missions"
   add_foreign_key "goals", "domains"
   add_foreign_key "goals", "users"
+  add_foreign_key "habit_logs", "habits"
+  add_foreign_key "habits", "domains"
+  add_foreign_key "habits", "users"
   add_foreign_key "missions", "domains"
   add_foreign_key "missions", "users"
   add_foreign_key "objectives", "missions"

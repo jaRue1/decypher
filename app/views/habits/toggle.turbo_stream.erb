@@ -1,0 +1,14 @@
+<%= turbo_stream.replace dom_id(@habit, @date) do %>
+  <%= turbo_frame_tag dom_id(@habit, @date) do %>
+    <%= button_to toggle_habit_path(@habit, date: @date),
+        method: :post,
+        class: "w-6 h-6 mx-auto rounded flex items-center justify-center transition-colors #{@log.completed ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30' : 'bg-slate-800 text-slate-600 hover:bg-slate-700 hover:text-slate-400'}",
+        data: { turbo_frame: dom_id(@habit, @date) } do %>
+      <% if @log.completed %>
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,72 @@
+<%= form_with model: habit, class: "space-y-6" do |f| %>
+  <% if habit.errors.any? %>
+    <div class="bg-red-900/20 border border-red-700 rounded-lg p-4">
+      <ul class="list-disc list-inside text-red-400 text-sm font-mono">
+        <% habit.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, class: "block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2" %>
+    <%= f.text_field :name,
+        class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500",
+        placeholder: "e.g., Morning workout, Read 30 minutes..." %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= f.label :icon, "Icon (emoji)", class: "block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2" %>
+      <%= f.text_field :icon,
+          class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500",
+          placeholder: "💪" %>
+    </div>
+    <div>
+      <%= f.label :color, class: "block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2" %>
+      <%= f.color_field :color,
+          class: "w-full h-12 bg-slate-800 border border-slate-700 rounded px-2 focus:outline-none focus:border-blue-500",
+          value: habit.color || "#3b82f6" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :domain_id, "Domain (optional)", class: "block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2" %>
+    <%= f.select :domain_id,
+        options_for_select(@domains.map { |d| [d.name, d.id] }, habit.domain_id),
+        { include_blank: "No domain" },
+        class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500" %>
+    <p class="text-slate-600 text-xs mt-1">Link this habit to a domain to track related progress</p>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= f.label :target_days_per_week, "Days per week", class: "block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2" %>
+      <%= f.number_field :target_days_per_week,
+          min: 1, max: 7,
+          class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500",
+          value: habit.target_days_per_week || 7 %>
+    </div>
+    <div>
+      <%= f.label :target_days_per_month, "Days per month", class: "block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2" %>
+      <%= f.number_field :target_days_per_month,
+          min: 1, max: 31,
+          class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500",
+          value: habit.target_days_per_month || 30 %>
+    </div>
+  </div>
+
+  <% if habit.persisted? %>
+    <div class="flex items-center gap-3">
+      <%= f.check_box :active, class: "w-5 h-5 bg-slate-800 border border-slate-700 rounded text-blue-500 focus:ring-0 focus:ring-offset-0" %>
+      <%= f.label :active, "Active", class: "font-mono text-sm text-slate-300" %>
+    </div>
+  <% end %>
+
+  <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+    <%= link_to "Cancel", habits_path, class: "text-slate-400 hover:text-white font-mono text-sm" %>
+    <%= f.submit habit.persisted? ? "Update Habit" : "Create Habit",
+        class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-6 py-2 rounded transition-colors cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,0 +1,218 @@
+<div class="p-8">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-1">Habit Tracker</h1>
+      <p class="font-mono text-2xl text-slate-100"><%= @date.strftime("%B %Y") %></p>
+    </div>
+    <div class="flex items-center gap-4">
+      <!-- Month Navigation -->
+      <div class="flex items-center gap-2">
+        <%= link_to habits_path(date: @date.prev_month), class: "p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        <% end %>
+        <% if @date.beginning_of_month != Date.current.beginning_of_month %>
+          <%= link_to "Today", habits_path, class: "font-mono text-xs text-blue-400 hover:text-blue-300 px-3 py-1 border border-blue-400/30 rounded" %>
+        <% end %>
+        <%= link_to habits_path(date: @date.next_month), class: "p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        <% end %>
+      </div>
+      <%= link_to new_habit_path, class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-4 py-2 rounded transition-colors" do %>
+        + New Habit
+      <% end %>
+    </div>
+  </div>
+
+  <% if @habits.any? %>
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
+      <!-- Main Grid (3 cols on xl) -->
+      <div class="xl:col-span-3">
+        <!-- Stats Bar -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+          <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+            <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Habits</span>
+            <span class="font-mono text-2xl text-slate-100"><%= @stats[:total_habits] %></span>
+          </div>
+          <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+            <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Completed</span>
+            <span class="font-mono text-2xl text-emerald-400"><%= @stats[:completed_count] %></span>
+          </div>
+          <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+            <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Possible</span>
+            <span class="font-mono text-2xl text-slate-300"><%= @stats[:total_possible] %></span>
+          </div>
+          <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+            <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Progress</span>
+            <span class="font-mono text-2xl text-blue-400"><%= @stats[:percentage] %>%</span>
+          </div>
+        </div>
+
+        <!-- Habit Grid -->
+        <div class="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-slate-700">
+                  <th class="sticky left-0 bg-slate-900 z-10 px-4 py-3 text-left font-mono text-xs uppercase tracking-widest text-slate-500 min-w-[150px]">
+                    Habit
+                  </th>
+                  <% @month_dates.each do |date| %>
+                    <th class="px-1 py-3 text-center font-mono text-xs <%= date == Date.current ? 'text-blue-400' : 'text-slate-500' %> <%= date.sunday? || date.saturday? ? 'bg-slate-800/50' : '' %>">
+                      <div class="flex flex-col items-center">
+                        <span class="text-[10px]"><%= date.strftime("%a")[0] %></span>
+                        <span><%= date.day %></span>
+                      </div>
+                    </th>
+                  <% end %>
+                  <th class="px-3 py-3 text-center font-mono text-xs uppercase tracking-widest text-slate-500">
+                    Rate
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @habits.each do |habit| %>
+                  <tr class="border-b border-slate-800 hover:bg-slate-800/30">
+                    <td class="sticky left-0 bg-slate-900 z-10 px-4 py-2">
+                      <div class="flex items-center gap-2">
+                        <% if habit.icon.present? %>
+                          <span><%= habit.icon %></span>
+                        <% end %>
+                        <span class="font-mono text-sm text-slate-300 truncate max-w-[120px]"><%= habit.name %></span>
+                      </div>
+                    </td>
+                    <% @month_dates.each do |date| %>
+                      <% completed = @habit_logs[[habit.id, date]]&.completed %>
+                      <% is_future = date > Date.current %>
+                      <td class="px-1 py-2 text-center <%= date.sunday? || date.saturday? ? 'bg-slate-800/50' : '' %>">
+                        <% if is_future %>
+                          <div class="w-6 h-6 mx-auto rounded bg-slate-800/50"></div>
+                        <% else %>
+                          <%= turbo_frame_tag dom_id(habit, date) do %>
+                            <%= button_to toggle_habit_path(habit, date: date),
+                                method: :post,
+                                class: "w-6 h-6 mx-auto rounded flex items-center justify-center transition-colors #{completed ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30' : 'bg-slate-800 text-slate-600 hover:bg-slate-700 hover:text-slate-400'}",
+                                data: { turbo_frame: dom_id(habit, date) } do %>
+                              <% if completed %>
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                              <% end %>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </td>
+                    <% end %>
+                    <td class="px-3 py-2 text-center">
+                      <span class="font-mono text-xs <%= habit.completion_rate_for_month(@date) >= 80 ? 'text-emerald-400' : habit.completion_rate_for_month(@date) >= 50 ? 'text-amber-400' : 'text-slate-500' %>">
+                        <%= habit.completion_rate_for_month(@date) %>%
+                      </span>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+              <tfoot>
+                <tr class="border-t border-slate-700 bg-slate-800/30">
+                  <td class="sticky left-0 bg-slate-800/30 z-10 px-4 py-3 font-mono text-xs text-slate-400">
+                    Daily Rate
+                  </td>
+                  <% @month_dates.each do |date| %>
+                    <%
+                      if date <= Date.current
+                        completed_today = @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
+                        rate = @habits.any? ? (completed_today.to_f / @habits.count * 100).round(0) : 0
+                      else
+                        rate = nil
+                      end
+                    %>
+                    <td class="px-1 py-3 text-center <%= date.sunday? || date.saturday? ? 'bg-slate-800/50' : '' %>">
+                      <% if rate %>
+                        <span class="font-mono text-[10px] <%= rate >= 80 ? 'text-emerald-400' : rate >= 50 ? 'text-amber-400' : 'text-slate-600' %>">
+                          <%= rate %>%
+                        </span>
+                      <% end %>
+                    </td>
+                  <% end %>
+                  <td class="px-3 py-3"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analysis Panel (1 col on xl) -->
+      <div class="xl:col-span-1 space-y-6">
+        <!-- Progress Overview -->
+        <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+          <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Monthly Progress</h3>
+          <div class="mb-4">
+            <div class="h-3 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-blue-600 to-emerald-400 transition-all" style="width: <%= @stats[:percentage] %>%"></div>
+            </div>
+            <p class="font-mono text-right text-xs text-slate-500 mt-1"><%= @stats[:completed_count] %> / <%= @stats[:total_possible] %></p>
+          </div>
+        </div>
+
+        <!-- Habit Goals -->
+        <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+          <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Goal vs Actual</h3>
+          <div class="space-y-4">
+            <% @habits.each do |habit| %>
+              <%
+                actual = habit.completed_days_for_month(@date)
+                goal = habit.target_days_per_month || 30
+                progress = [(actual.to_f / goal * 100), 100].min.round(0)
+              %>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-mono text-xs text-slate-400 truncate max-w-[100px]"><%= habit.name %></span>
+                  <span class="font-mono text-xs text-slate-500"><%= actual %>/<%= goal %></span>
+                </div>
+                <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full <%= progress >= 100 ? 'bg-emerald-500' : progress >= 70 ? 'bg-blue-500' : 'bg-amber-500' %> transition-all" style="width: <%= progress %>%"></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Streaks -->
+        <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+          <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Current Streaks</h3>
+          <div class="space-y-3">
+            <% @habits.sort_by { |h| -h.current_streak }.each do |habit| %>
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-xs text-slate-400 truncate max-w-[100px]"><%= habit.name %></span>
+                <div class="flex items-center gap-2">
+                  <% if habit.current_streak > 0 %>
+                    <span class="font-mono text-sm text-amber-400"><%= habit.current_streak %></span>
+                    <span class="text-amber-400">🔥</span>
+                  <% else %>
+                    <span class="font-mono text-xs text-slate-600">--</span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="bg-slate-900 border border-slate-700 rounded-lg p-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 bg-slate-800 rounded-full flex items-center justify-center">
+        <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+        </svg>
+      </div>
+      <p class="text-slate-500 font-mono mb-4">No habits yet</p>
+      <p class="text-slate-600 text-sm mb-6">Create habits to start tracking your daily routines</p>
+      <%= link_to "Create your first habit", new_habit_path, class: "text-blue-400 hover:text-blue-300 font-mono" %>
+    </div>
+  <% end %>
+</div>
