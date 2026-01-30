@@ -1,0 +1,18 @@
+<div data-confirm-target="modal"
+     data-action="keydown@window->confirm#closeOnEscape click->confirm#closeOnBackdrop"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+  <div class="bg-slate-900 border border-amber-700 rounded-lg p-6 max-w-md w-full mx-4">
+    <h3 class="font-mono text-lg text-slate-100 mb-2">Abort Mission?</h3>
+    <p class="text-slate-400 text-sm mb-6">This will put the mission on hold. Your progress will be saved and you can resume anytime.</p>
+    <div class="flex items-center justify-end gap-3">
+      <button data-action="click->confirm#close"
+              class="font-mono text-sm text-slate-400 hover:text-white px-4 py-2 border border-slate-700 rounded hover:border-slate-500 transition-colors">
+        Cancel
+      </button>
+      <button data-action="click->confirm#confirm"
+              class="font-mono text-sm text-white bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded transition-colors">
+        Abort Mission
+      </button>
+    </div>
+  </div>
+</div>

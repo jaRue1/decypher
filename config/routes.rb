@@ -13,7 +13,16 @@ Rails.application.routes.draw do
     end
   end
   resources :missions do
-    resources :objectives, only: [:create, :update, :destroy]
+    member do
+      post :commence
+      post :abort_mission
+    end
+    resources :objectives, only: [:create, :update, :destroy] do
+      member do
+        post :toggle
+        post :start
+      end
+    end
   end
   resources :goals
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

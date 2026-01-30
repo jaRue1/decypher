@@ -50,3 +50,29 @@
   - Delete mission → all its tasks are deleted
   - Prevents orphaned records
   - Other options: :nullify (set foreign key to null), :restrict_with_error (prevent delete if children exist)
+```
+
+
+Automatic attribute accessors from columns:
+  - Any column in your table becomes a method on the model
+  - No need to declare attr_accessor or define getters/setters
+  - Works for all types: strings, integers, booleans, jsonb, datetime, etc.
+
+  JSONB columns:
+  - Stored as JSON in PostgreSQL
+  - Automatically converted to Ruby Hash when accessed
+  - Great for flexible/schemaless data like metadata
+
+ ```ruby
+  The pattern:
+  class Achievement < ApplicationRecord  # ← inherits the magic
+    # achievement_type, metadata, achieved_at, etc.
+    # are all available automatically from the schema
+
+    def description
+      # self.metadata, self.achievement_type available without declaring them
+    end
+  end
+```
+# This is why Rails is called "convention over configuration" 
+# you don't configure these mappings, they just work based on naming conventions (table achievements → model Achievement, column  metadata → method metadata).

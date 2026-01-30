@@ -1,0 +1,41 @@
+<%= link_to mission_path(mission), class: "block bg-slate-900 border border-slate-700 rounded-lg p-6 hover:border-blue-500 transition-all" do %>
+  <div class="flex items-start justify-between mb-3">
+    <div class="flex-1">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="font-mono text-xs uppercase tracking-widest text-slate-500"><%= mission.domain.name %></span>
+        <% if mission.grade.present? %>
+          <span class="font-mono text-xs px-2 py-0.5 rounded <%= grade_color(mission.grade) %>">
+            Grade <%= mission.grade %>
+          </span>
+        <% end %>
+      </div>
+      <h2 class="font-mono text-xl text-slate-100"><%= mission.title %></h2>
+    </div>
+    <span class="font-mono text-xs px-2 py-1 rounded <%= status_color(mission.status) %>">
+      <%= mission.status&.upcase || 'STANDBY' %>
+    </span>
+  </div>
+
+  <p class="text-slate-400 text-sm mb-4"><%= truncate(mission.description, length: 120) %></p>
+
+  <!-- Progress Bar -->
+  <div class="mb-3">
+    <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+      <div class="h-full <%= mission.status == 'completed' ? 'bg-emerald-500' : 'bg-blue-500' %> transition-all" style="width: <%= mission.completion_percentage %>%"></div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between text-xs font-mono text-slate-500">
+    <div class="flex items-center gap-4">
+      <span><%= mission.objectives.completed.count %>/<%= mission.objectives.count %> objectives</span>
+      <span><%= mission.total_xp %> XP</span>
+    </div>
+    <% if mission.status == "aborted" %>
+      <span class="text-amber-400">Click to resume</span>
+    <% elsif mission.started_at.present? && mission.status == "active" %>
+      <span>Started <%= time_ago_in_words(mission.started_at) %> ago</span>
+    <% elsif mission.completed_at.present? %>
+      <span>Completed <%= time_ago_in_words(mission.completed_at) %> ago</span>
+    <% end %>
+  </div>
+<% end %>

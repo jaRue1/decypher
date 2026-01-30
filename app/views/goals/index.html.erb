@@ -32,7 +32,14 @@
                 </div>
                 <div class="flex items-center gap-2 ml-4">
                   <%= link_to "Edit", edit_goal_path(goal), class: "font-mono text-xs text-slate-400 hover:text-white" %>
-                  <%= button_to "Delete", goal_path(goal), method: :delete, data: { turbo_confirm: "Delete this goal?" }, class: "font-mono text-xs text-red-400 hover:text-red-300" %>
+                  <div data-controller="confirm">
+                    <%= button_to goal_path(goal), method: :delete,
+                        data: { action: "click->confirm#open" },
+                        class: "font-mono text-xs text-red-400 hover:text-red-300" do %>
+                      Delete
+                    <% end %>
+                    <%= render "shared/confirm_modal" %>
+                  </div>
                 </div>
               </div>
             <% end %>

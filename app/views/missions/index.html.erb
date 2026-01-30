@@ -1,39 +1,76 @@
 <div class="p-8">
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-1">Mission Log</h1>
-        <p class="font-mono text-2xl text-slate-100">Active Missions</p>
-      </div>
-      <%= link_to new_mission_path, class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-4 py-2 rounded transition-colors" do %>
-        + New Mission
-      <% end %>
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-1">Mission Control</h1>
+      <p class="font-mono text-2xl text-slate-100">Your Missions</p>
     </div>
-
-    <% if @missions.any? %>
-      <div class="space-y-4">
-        <% @missions.each do |mission| %>
-          <%= link_to mission_path(mission), class: "block bg-slate-900 border border-slate-700 rounded-lg p-6 hover:border-blue-500 transition-all" do %>
-            <div class="flex items-start justify-between mb-2">
-              <div>
-                <span class="font-mono text-xs uppercase tracking-widest text-slate-500"><%= mission.domain.name %></span>
-                <h2 class="font-mono text-xl text-slate-100 mt-1"><%= mission.title %></h2>
-              </div>
-              <span class="font-mono text-xs px-2 py-1 rounded <%= mission.status == 'active' ? 'bg-emerald-400/10 text-emerald-400' : 'bg-slate-700 text-slate-400' %>">
-                <%= mission.status&.capitalize || 'Active' %>
-              </span>
-            </div>
-            <p class="text-slate-400 text-sm mb-4"><%= truncate(mission.description, length: 120) %></p>
-            <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
-              <span><%= mission.objectives.count %> objectives</span>
-              <span><%= mission.objectives.where.not(completed_at: nil).count %> completed</span>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="bg-slate-900 border border-slate-700 rounded-lg p-12 text-center">
-        <p class="text-slate-500 font-mono mb-4">No missions yet</p>
-        <%= link_to "Create your first mission", new_mission_path, class: "text-blue-400 hover:text-blue-300 font-mono" %>
-      </div>
+    <%= link_to new_mission_path, class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-4 py-2 rounded transition-colors" do %>
+      + New Mission
     <% end %>
   </div>
+
+  <% if @missions.any? %>
+    <!-- Active Missions -->
+    <% active_missions = @missions.select { |m| m.status == "active" } %>
+    <% if active_missions.any? %>
+      <div class="mb-8">
+        <h2 class="font-mono text-xs uppercase tracking-widest text-blue-400 mb-4">Active Missions</h2>
+        <div class="space-y-4">
+          <% active_missions.each do |mission| %>
+            <%= render "mission_card", mission: mission %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Standby Missions -->
+    <% standby_missions = @missions.select { |m| m.status == "standby" } %>
+    <% if standby_missions.any? %>
+      <div class="mb-8">
+        <h2 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Standby</h2>
+        <div class="space-y-4">
+          <% standby_missions.each do |mission| %>
+            <%= render "mission_card", mission: mission %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Completed Missions -->
+    <% completed_missions = @missions.select { |m| m.status == "completed" } %>
+    <% if completed_missions.any? %>
+      <div class="mb-8">
+        <h2 class="font-mono text-xs uppercase tracking-widest text-emerald-400 mb-4">Completed</h2>
+        <div class="space-y-4">
+          <% completed_missions.each do |mission| %>
+            <%= render "mission_card", mission: mission %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Aborted Missions -->
+    <% aborted_missions = @missions.select { |m| m.status == "aborted" } %>
+    <% if aborted_missions.any? %>
+      <div class="mb-8">
+        <h2 class="font-mono text-xs uppercase tracking-widest text-amber-400 mb-4">On Hold <span class="text-slate-500 normal-case">(can resume)</span></h2>
+        <div class="space-y-4">
+          <% aborted_missions.each do |mission| %>
+            <%= render "mission_card", mission: mission %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="bg-slate-900 border border-slate-700 rounded-lg p-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 bg-slate-800 rounded-full flex items-center justify-center">
+        <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>
+      </div>
+      <p class="text-slate-500 font-mono mb-4">No missions yet</p>
+      <p class="text-slate-600 text-sm mb-6">Create a mission to start tracking your objectives</p>
+      <%= link_to "Create your first mission", new_mission_path, class: "text-blue-400 hover:text-blue-300 font-mono" %>
+    </div>
+  <% end %>
+</div>
