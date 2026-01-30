@@ -13,14 +13,17 @@
 
       <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
       <%= javascript_importmap_tags %>
+      <%= yield :head %>
     </head>
 
     <body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
       <% if Current.user %>
-        <%= render "shared/sidebar" %>
-        <main class="ml-64 min-h-screen">
-          <%= yield %>
-        </main>
+        <div data-controller="sidebar">
+          <%= render "shared/sidebar" %>
+          <main class="ml-64 min-h-screen transition-all duration-300" data-sidebar-target="main">
+            <%= yield %>
+          </main>
+        </div>
       <% else %>
         <%= yield %>
       <% end %>

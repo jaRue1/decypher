@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { Chart } from "chart.js/auto"
+import Chart from "chart.js/auto"
 
 export default class extends Controller {
   static values = {
@@ -8,6 +8,7 @@ export default class extends Controller {
   }
 
   connect() {
+    console.log("Habit chart controller connected", this.labelsValue, this.dataValue)
     this.renderChart()
   }
 
@@ -18,9 +19,11 @@ export default class extends Controller {
   }
 
   renderChart() {
-    const ctx = this.element.getContext('2d')
+    try {
+      const ctx = this.element.getContext('2d')
+      console.log("Creating chart with Chart:", Chart)
 
-    this.chart = new Chart(ctx, {
+      this.chart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: this.labelsValue,
@@ -110,5 +113,8 @@ export default class extends Controller {
         }
       }
     })
+    } catch (error) {
+      console.error("Chart.js error:", error)
+    }
   }
 }

@@ -1,0 +1,218 @@
+<div class="p-8">
+  <!-- Header with Date Navigation -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <%= link_to daily_entries_path(date: @date), class: "font-mono text-xs uppercase tracking-widest text-slate-500 hover:text-blue-400 transition-colors mb-1 inline-flex items-center gap-1" do %>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        Calendar
+      <% end %>
+      <p class="font-mono text-2xl text-slate-100"><%= @date.strftime("%A, %B %d, %Y") %></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= link_to daily_entry_path(date: @date - 1.day), class: "p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors" do %>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      <% end %>
+      <% if @date != Date.current %>
+        <%= link_to "Today", daily_entry_path(date: Date.current), class: "font-mono text-xs text-blue-400 hover:text-blue-300 px-3 py-1 border border-blue-400/30 rounded" %>
+      <% end %>
+      <% if @date < Date.current %>
+        <%= link_to daily_entry_path(date: @date + 1.day), class: "p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        <% end %>
+      <% else %>
+        <div class="p-2 text-slate-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Week Navigation -->
+  <div class="flex gap-2 mb-8">
+    <% @week_dates.each do |date| %>
+      <%= link_to daily_entry_path(date: date),
+          class: "flex-1 py-3 px-2 rounded-lg text-center transition-colors #{date == @date ? 'bg-blue-600 text-white' : date > Date.current ? 'bg-slate-900/50 text-slate-600 cursor-not-allowed' : 'bg-slate-900 border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'}",
+          disabled: date > Date.current do %>
+        <span class="block font-mono text-xs uppercase"><%= date.strftime("%a") %></span>
+        <span class="block font-mono text-lg mt-1"><%= date.day %></span>
+        <% day_entry = Current.user.daily_entries.find_by(date: date) %>
+        <% if day_entry&.mood_score %>
+          <span class="block mt-1 font-mono text-xs text-slate-400"><%= day_entry.mood_score %></span>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Content (2 cols) -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Mood & Motivation -->
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+        <h2 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-6">How are you feeling?</h2>
+
+        <%= form_with model: @entry, url: daily_entry_path(date: @date), method: :patch, id: 'daily-entry-form', class: "space-y-6" do |f| %>
+          <!-- Mood Score -->
+          <div>
+            <label class="block font-mono text-sm text-slate-300 mb-3">Mood</label>
+            <div class="flex items-center gap-2">
+              <% (1..10).each do |score| %>
+                <label class="flex-1">
+                  <input type="radio" name="daily_entry[mood_score]" value="<%= score %>"
+                         class="sr-only peer"
+                         <%= 'checked' if @entry.mood_score == score %>>
+                  <div class="py-2 text-center rounded cursor-pointer transition-colors
+                              peer-checked:bg-blue-600 peer-checked:text-white
+                              bg-slate-800 text-slate-500 hover:bg-slate-700 hover:text-slate-300">
+                    <span class="font-mono text-sm"><%= score %></span>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+            <div class="flex justify-between mt-2">
+              <span class="font-mono text-xs text-slate-600">Low</span>
+              <span class="font-mono text-xs text-slate-600">Excellent</span>
+            </div>
+          </div>
+
+          <!-- Motivation Score -->
+          <div>
+            <label class="block font-mono text-sm text-slate-300 mb-3">Motivation</label>
+            <div class="flex items-center gap-2">
+              <% (1..10).each do |score| %>
+                <label class="flex-1">
+                  <input type="radio" name="daily_entry[motivation_score]" value="<%= score %>"
+                         class="sr-only peer"
+                         <%= 'checked' if @entry.motivation_score == score %>>
+                  <div class="py-2 text-center rounded cursor-pointer transition-colors
+                              peer-checked:bg-emerald-600 peer-checked:text-white
+                              bg-slate-800 text-slate-500 hover:bg-slate-700 hover:text-slate-300">
+                    <span class="font-mono text-sm"><%= score %></span>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+            <div class="flex justify-between mt-2">
+              <span class="font-mono text-xs text-slate-600">Low</span>
+              <span class="font-mono text-xs text-slate-600">Peak</span>
+            </div>
+          </div>
+
+          <!-- Wins -->
+          <div>
+            <label class="block font-mono text-sm text-slate-300 mb-2">Wins</label>
+            <%= f.text_area :wins,
+                rows: 3,
+                placeholder: "What went well today?",
+                class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono text-sm focus:outline-none focus:border-blue-500 placeholder:text-slate-600" %>
+          </div>
+
+          <!-- Improvements -->
+          <div>
+            <label class="block font-mono text-sm text-slate-300 mb-2">What can be improved?</label>
+            <%= f.text_area :improvements,
+                rows: 3,
+                placeholder: "Areas for growth...",
+                class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono text-sm focus:outline-none focus:border-blue-500 placeholder:text-slate-600" %>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label class="block font-mono text-sm text-slate-300 mb-2">Notes</label>
+            <%= f.text_area :notes,
+                rows: 4,
+                placeholder: "General thoughts, reflections, or anything else...",
+                class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono text-sm focus:outline-none focus:border-blue-500 placeholder:text-slate-600" %>
+          </div>
+
+          <div class="flex justify-end">
+            <%= f.submit "Save Entry", class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-6 py-2 rounded transition-colors cursor-pointer" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Sidebar (1 col) -->
+    <div class="space-y-6">
+      <!-- Today's Habits -->
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500">Habits</h3>
+          <span class="font-mono text-sm <%= @habits_percentage >= 80 ? 'text-emerald-400' : @habits_percentage >= 50 ? 'text-amber-400' : 'text-slate-400' %>">
+            <%= @habits_percentage %>%
+          </span>
+        </div>
+
+        <% if @habits.any? %>
+          <div class="space-y-2">
+            <% @habits.each do |habit| %>
+              <% completed = @habit_logs[habit.id]&.completed %>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded flex items-center justify-center <%= completed ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-600' %>">
+                  <% if completed %>
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                  <% end %>
+                </div>
+                <span class="font-mono text-xs <%= completed ? 'text-slate-300' : 'text-slate-500' %>"><%= habit.name %></span>
+              </div>
+            <% end %>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-800">
+            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 transition-all" style="width: <%= @habits_percentage %>%"></div>
+            </div>
+            <p class="font-mono text-xs text-slate-500 mt-2"><%= @habits_completed %> / <%= @habits.count %> completed</p>
+          </div>
+        <% else %>
+          <p class="font-mono text-xs text-slate-500">No habits tracked. <%= link_to "Create one", new_habit_path, class: "text-blue-400 hover:text-blue-300" %>.</p>
+        <% end %>
+      </div>
+
+      <!-- Mood & Motivation Trend -->
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-6"
+           data-controller="mood-trend"
+           data-mood-trend-labels-value="<%= @trend_labels.to_json %>"
+           data-mood-trend-mood-data-value="<%= @trend_mood_data.to_json %>"
+           data-mood-trend-motivation-data-value="<%= @trend_motivation_data.to_json %>">
+        <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">7-Day Trend</h3>
+        <div class="h-40">
+          <canvas data-mood-trend-target="chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+        <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Quick Links</h3>
+        <div class="space-y-2">
+          <%= link_to habits_path, class: "flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800 transition-colors" do %>
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+            </svg>
+            <span class="font-mono text-sm text-slate-300">Habit Tracker</span>
+          <% end %>
+          <%= link_to missions_path, class: "flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800 transition-colors" do %>
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            <span class="font-mono text-sm text-slate-300">Missions</span>
+          <% end %>
+          <%= link_to profile_path, class: "flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800 transition-colors" do %>
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span class="font-mono text-sm text-slate-300">Profile</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

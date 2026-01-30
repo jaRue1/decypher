@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_30_223057) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_30_230759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_223057) do
     t.string "name"
     t.datetime "updated_at", null: false
     t.index ["mission_id"], name: "index_badges_on_mission_id"
+  end
+
+  create_table "daily_entries", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.text "improvements"
+    t.integer "mood_score"
+    t.integer "motivation_score"
+    t.text "notes"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.text "wins"
+    t.index ["user_id", "date"], name: "index_daily_entries_on_user_id_and_date", unique: true
+    t.index ["user_id"], name: "index_daily_entries_on_user_id"
   end
 
   create_table "domains", force: :cascade do |t|
@@ -178,6 +192,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_223057) do
 
   add_foreign_key "achievements", "users"
   add_foreign_key "badges", "missions"
+  add_foreign_key "daily_entries", "users"
   add_foreign_key "goals", "domains"
   add_foreign_key "goals", "users"
   add_foreign_key "habit_logs", "habits"

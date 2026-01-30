@@ -8,5 +8,5 @@ pin '@hotwired/stimulus', to: 'stimulus.min.js'
 pin '@hotwired/stimulus-loading', to: 'stimulus-loading.js'
 pin_all_from 'app/javascript/controllers', under: 'controllers'
 
-# Chart.js for habit trend visualization (auto-register version)
-pin 'chart.js/auto', to: 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/+esm'
+# Chart.js for habit trend visualization
+pin 'chart.js/auto', to: 'https://esm.sh/chart.js@4.4.1/auto'

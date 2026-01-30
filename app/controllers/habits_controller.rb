@@ -15,15 +15,24 @@ class HabitsController < ApplicationController
                           .where(date: @date.all_month)
                           .index_by { |log| [log.habit_id, log.date] }
 
-    # Prepare chart data (only for days up to today)
-    @chart_dates = @month_dates.select { |d| d <= Date.current }
-    @chart_labels = @chart_dates.map { |d| d.day.to_s }
-    @chart_data = @chart_dates.map do |date|
-      next 0 if @habits.empty?
+    # Prepare weekly progress data (current week: Sun-Sat)
+    @week_start = Date.current.beginning_of_week(:sunday)
+    @week_dates = (@week_start..(@week_start + 6)).to_a
+    @week_labels = @week_dates.map { |d| d.strftime('%a') }
 
-      completed = @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
-      (completed.to_f / @habits.count * 100).round(0)
+    # For bar chart: count of completed habits per day
+    @week_completed = @week_dates.map do |date|
+      next 0 if date > Date.current
+      @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
     end
+
+    # For donut: total completed vs total possible this week
+    days_elapsed = [@week_dates.count { |d| d <= Date.current }, 1].max
+    @week_total_possible = @habits.count * days_elapsed
+    @week_total_completed = @week_dates.select { |d| d <= Date.current }.sum do |date|
+      @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
+    end
+    @week_percentage = @week_total_possible.positive? ? (@week_total_completed.to_f / @week_total_possible * 100).round(0) : 0
   end
 
   def show

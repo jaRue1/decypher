@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       post :toggle
     end
   end
+  resources :daily_entries, param: :date, only: %i[index show update]
   resource :profile, only: [:show]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

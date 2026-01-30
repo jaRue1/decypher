@@ -1,6 +1,30 @@
-<div class="p-8">
+<%= content_for :head do %>
+  <style>
+    /* Custom scrollbar for habit tracker */
+    .habit-scrollbar::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    .habit-scrollbar::-webkit-scrollbar-track {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    .habit-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    .habit-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .habit-scrollbar::-webkit-scrollbar-corner {
+      background: #1e293b;
+    }
+  </style>
+<% end %>
+
+<div class="p-8 h-screen overflow-hidden flex flex-col">
   <!-- Header -->
-  <div class="flex items-center justify-between mb-8">
+  <div class="flex items-center justify-between mb-6 flex-shrink-0">
     <div>
       <h1 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-1">Habit Tracker</h1>
       <p class="font-mono text-2xl text-slate-100"><%= @date.strftime("%B %Y") %></p>
@@ -29,11 +53,11 @@
   </div>
 
   <% if @habits.any? %>
-    <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
-      <!-- Main Grid (3 cols on xl) -->
-      <div class="xl:col-span-3">
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 flex-1 min-h-0">
+      <!-- Main Content (3 cols on xl) -->
+      <div class="xl:col-span-3 flex flex-col gap-6 min-h-0">
         <!-- Stats Bar -->
-        <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="grid grid-cols-4 gap-4">
           <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
             <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Habits</span>
             <span class="font-mono text-2xl text-slate-100"><%= @stats[:total_habits] %></span>
@@ -52,9 +76,36 @@
           </div>
         </div>
 
-        <!-- Habit Grid -->
-        <div class="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden">
-          <div class="overflow-x-auto">
+        <!-- Weekly Progress Card -->
+        <div class="bg-slate-900 border border-slate-700 rounded-lg p-6"
+             data-controller="weekly-progress"
+             data-weekly-progress-labels-value="<%= @week_labels.to_json %>"
+             data-weekly-progress-data-value="<%= @week_completed.to_json %>"
+             data-weekly-progress-percentage-value="<%= @week_percentage %>"
+             data-weekly-progress-completed-value="<%= @week_total_completed %>"
+             data-weekly-progress-total-value="<%= @week_total_possible %>">
+          <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Weekly Progress</h3>
+          <div class="flex gap-6 items-center">
+            <!-- Bar Chart -->
+            <div class="flex-1 h-36">
+              <canvas data-weekly-progress-target="barChart"></canvas>
+            </div>
+            <!-- Donut Chart with percentage -->
+            <div class="w-32 flex flex-col items-center">
+              <div class="relative w-24 h-24">
+                <canvas data-weekly-progress-target="donutChart"></canvas>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="font-mono text-2xl text-emerald-400 font-bold"><%= @week_percentage %>%</span>
+                </div>
+              </div>
+              <p class="font-mono text-xs text-slate-500 mt-2"><%= @week_total_completed %> / <%= @week_total_possible %> Completed</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Habit Grid (fills remaining space with internal scroll) -->
+        <div class="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden flex-1 min-h-0">
+          <div class="overflow-auto habit-scrollbar h-full">
             <table class="w-full">
               <thead>
                 <tr class="border-b border-slate-700">
@@ -69,7 +120,7 @@
                       </div>
                     </th>
                   <% end %>
-                  <th class="px-3 py-3 text-center font-mono text-xs uppercase tracking-widest text-slate-500">
+                  <th class="sticky right-0 bg-slate-900 z-10 px-3 py-3 text-center font-mono text-xs uppercase tracking-widest text-slate-500">
                     Rate
                   </th>
                 </tr>
@@ -78,12 +129,12 @@
                 <% @habits.each do |habit| %>
                   <tr class="border-b border-slate-800 hover:bg-slate-800/30">
                     <td class="sticky left-0 bg-slate-900 z-10 px-4 py-2">
-                      <div class="flex items-center gap-2">
+                      <%= link_to edit_habit_path(habit), class: "flex items-center gap-2 hover:text-white transition-colors" do %>
                         <% if habit.icon.present? %>
                           <span><%= habit.icon %></span>
                         <% end %>
                         <span class="font-mono text-sm text-slate-300 truncate max-w-[120px]"><%= habit.name %></span>
-                      </div>
+                      <% end %>
                     </td>
                     <% @month_dates.each do |date| %>
                       <% completed = @habit_logs[[habit.id, date]]&.completed %>
@@ -107,7 +158,7 @@
                         <% end %>
                       </td>
                     <% end %>
-                    <td class="px-3 py-2 text-center">
+                    <td class="sticky right-0 bg-slate-900 z-10 px-3 py-2 text-center">
                       <span class="font-mono text-xs <%= habit.completion_rate_for_month(@date) >= 80 ? 'text-emerald-400' : habit.completion_rate_for_month(@date) >= 50 ? 'text-amber-400' : 'text-slate-500' %>">
                         <%= habit.completion_rate_for_month(@date) %>%
                       </span>
@@ -115,39 +166,14 @@
                   </tr>
                 <% end %>
               </tbody>
-              <tfoot>
-                <tr class="border-t border-slate-700 bg-slate-800/30">
-                  <td class="sticky left-0 bg-slate-800/30 z-10 px-4 py-3 font-mono text-xs text-slate-400">
-                    Daily Rate
-                  </td>
-                  <% @month_dates.each do |date| %>
-                    <%
-                      if date <= Date.current
-                        completed_today = @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
-                        rate = @habits.any? ? (completed_today.to_f / @habits.count * 100).round(0) : 0
-                      else
-                        rate = nil
-                      end
-                    %>
-                    <td class="px-1 py-3 text-center <%= date.sunday? || date.saturday? ? 'bg-slate-800/50' : '' %>">
-                      <% if rate %>
-                        <span class="font-mono text-[10px] <%= rate >= 80 ? 'text-emerald-400' : rate >= 50 ? 'text-amber-400' : 'text-slate-600' %>">
-                          <%= rate %>%
-                        </span>
-                      <% end %>
-                    </td>
-                  <% end %>
-                  <td class="px-3 py-3"></td>
-                </tr>
-              </tfoot>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- Analysis Panel (1 col on xl) -->
-      <div class="xl:col-span-1 space-y-6">
-        <!-- Progress Overview -->
+      <!-- Sidebar (1 col on xl) -->
+      <div class="xl:col-span-1 space-y-6 overflow-y-auto habit-scrollbar">
+        <!-- Monthly Progress -->
         <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
           <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Monthly Progress</h3>
           <div class="mb-4">
@@ -158,20 +184,25 @@
           </div>
         </div>
 
-        <!-- Trend Chart -->
-        <% if @chart_data.any? %>
-          <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
-            <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Daily Trend</h3>
-            <div class="h-40">
-              <canvas
-                data-controller="habit-chart"
-                data-habit-chart-labels-value="<%= @chart_labels.to_json %>"
-                data-habit-chart-data-value="<%= @chart_data.to_json %>"></canvas>
+        <!-- Today's Progress -->
+        <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+          <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-3">Today's Progress</h3>
+          <%
+            today_completed = @habits.count { |h| @habit_logs[[h.id, Date.current]]&.completed }
+            today_percentage = @habits.any? ? (today_completed.to_f / @habits.count * 100).round(0) : 0
+          %>
+          <div class="flex items-center gap-4 mb-2">
+            <div class="flex-1">
+              <div class="h-3 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-blue-600 to-emerald-400 transition-all rounded-full" style="width: <%= today_percentage %>%"></div>
+              </div>
             </div>
+            <span class="font-mono text-lg <%= today_percentage >= 80 ? 'text-emerald-400' : today_percentage >= 50 ? 'text-amber-400' : 'text-slate-400' %>"><%= today_percentage %>%</span>
           </div>
-        <% end %>
+          <p class="font-mono text-xs text-slate-500"><%= today_completed %> / <%= @habits.count %> habits · <%= Date.current.strftime("%a, %b %d") %></p>
+        </div>
 
-        <!-- Habit Goals -->
+        <!-- Goal vs Actual -->
         <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
           <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Goal vs Actual</h3>
           <div class="space-y-4">
@@ -194,7 +225,7 @@
           </div>
         </div>
 
-        <!-- Streaks -->
+        <!-- Current Streaks -->
         <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
           <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Current Streaks</h3>
           <div class="space-y-3">

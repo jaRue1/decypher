@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :goals, dependent: :destroy
   has_many :achievements, dependent: :destroy
   has_many :habits, dependent: :destroy
+  has_many :daily_entries, dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
