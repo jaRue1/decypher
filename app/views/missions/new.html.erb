@@ -1,4 +1,10 @@
-<div>
-  <h1 class="font-bold text-4xl">Missions#new</h1>
-  <p>Find me in app/views/missions/new.html.erb</p>
-</div>
+<div class="p-8">
+    <div class="mb-8">
+      <h1 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-1">New Mission</h1>
+      <p class="font-mono text-2xl text-slate-100">Create a Mission</p>
+    </div>
+
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-6 max-w-2xl mx-auto">
+      <%= render "form", mission: @mission, domains: @domains %>
+    </div>
+  </div>
