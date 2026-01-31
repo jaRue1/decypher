@@ -27,9 +27,8 @@ gem "bcrypt", "~> 3.1.7"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[windows jruby]
 
-# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
+# Database-backed adapters for Active Job and Action Cable (using primary database)
 gem "solid_cable"
-gem "solid_cache"
 gem "solid_queue"
 
 # Reduces boot times through caching; required in config/boot.rb
