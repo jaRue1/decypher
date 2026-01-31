@@ -59,7 +59,7 @@ module Operator
         {
           "habits": [
             {
-              "name": "<habit name - action-oriented, e.g., 'Read 20 minutes of technical docs'>",
+              "name": "<2-4 words, e.g., 'Read tech docs', 'Practice Rails', 'Write tests'>",
               "target_days_per_week": <2-5>,
               "target_days_per_month": <days_per_week * 4>,
               "icon": "<single emoji>",
@@ -120,7 +120,7 @@ module Operator
         {
           "habits": [
             {
-              "name": "<habit name - action-oriented, e.g., 'Practice coding for 30 minutes'>",
+              "name": "<2-4 words, e.g., 'Practice coding', 'Study patterns', 'Review code'>",
               "target_days_per_week": <2-5>,
               "target_days_per_month": <days_per_week * 4>,
               "icon": "<single emoji>",
