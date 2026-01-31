@@ -5,9 +5,11 @@ class Goal < ApplicationRecord
   belongs_to :domain, optional: true
 
   STATUSES = %w[active completed archived].freeze
+  PRIORITIES = (1..5).to_a.freeze
 
   validates :content, presence: true
   validates :status, inclusion: { in: STATUSES }, allow_nil: true
+  validates :priority, inclusion: { in: PRIORITIES }, allow_nil: true
   validate :one_active_per_domain, on: :create
 
   scope :active, -> { where(status: 'active') }

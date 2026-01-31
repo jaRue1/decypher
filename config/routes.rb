@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       post :commence
       post :abort_mission
     end
-    resources :objectives, only: %i[create update destroy] do
+    resources :objectives, only: %i[create edit update destroy] do
       member do
         post :toggle
         post :start
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     end
   end
   resources :daily_entries, param: :date, only: %i[index show update]
-  resource :profile, only: [:show]
+  resource :profile, only: [:show, :edit, :update]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

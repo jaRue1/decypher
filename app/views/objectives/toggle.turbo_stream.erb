@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@objective) do %>
+  <%= render partial: "missions/objective", locals: { objective: @objective, mission: @mission } %>
+<% end %>

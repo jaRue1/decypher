@@ -52,6 +52,6 @@ class GoalsController < ApplicationController
   end
 
   def goal_params
-    params.expect(goal: %i[content domain_id goal_type timeframe])
+    params.expect(goal: %i[content domain_id goal_type timeframe priority context success_criteria current_blockers])
   end
 end

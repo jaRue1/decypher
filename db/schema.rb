@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_30_230759) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_30_234412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,10 +68,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_230759) do
 
   create_table "goals", force: :cascade do |t|
     t.text "content"
+    t.text "context"
     t.datetime "created_at", null: false
+    t.text "current_blockers"
     t.bigint "domain_id"
     t.string "goal_type"
+    t.integer "priority"
     t.string "status"
+    t.text "success_criteria"
     t.string "timeframe"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
@@ -187,7 +191,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_230759) do
     t.string "password_digest", null: false
     t.integer "total_xp", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.string "username"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "achievements", "users"

@@ -105,82 +105,13 @@
       </span>
     </div>
 
+    <div id="objectives" class="space-y-2">
+      <% @objectives.each do |objective| %>
+        <%= render partial: "missions/objective", locals: { objective: objective, mission: @mission } %>
+      <% end %>
+    </div>
+
     <% if @objectives.any? %>
-      <div class="space-y-2">
-        <% @objectives.each do |objective| %>
-          <div class="flex items-center gap-3 p-4 bg-slate-800 rounded group <%= objective.status == 'active' ? 'border border-blue-500/50' : '' %>">
-            <!-- Status Indicator / Action Button -->
-            <% if objective.completed? %>
-              <% if %w[active completed].include?(@mission.status) %>
-                <%= button_to toggle_mission_objective_path(@mission, objective), method: :post,
-                    class: "w-7 h-7 rounded-full border-2 border-emerald-500 bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-sm flex-shrink-0 cursor-pointer hover:bg-emerald-500/40 transition-colors" do %>
-                  ✓
-                <% end %>
-              <% else %>
-                <span class="w-7 h-7 rounded-full border-2 border-emerald-500 bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-sm flex-shrink-0">✓</span>
-              <% end %>
-            <% elsif objective.status == "active" %>
-              <% if @mission.status == "active" %>
-                <%= button_to toggle_mission_objective_path(@mission, objective), method: :post,
-                    class: "w-7 h-7 rounded-full border-2 border-blue-500 bg-blue-500/20 flex items-center justify-center transition-colors flex-shrink-0 cursor-pointer hover:bg-blue-500/40 animate-pulse" do %>
-                  <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                <% end %>
-              <% else %>
-                <span class="w-7 h-7 rounded-full border-2 border-blue-500 bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                  <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                </span>
-              <% end %>
-            <% else %>
-              <% if @mission.status == "active" %>
-                <%= button_to toggle_mission_objective_path(@mission, objective), method: :post,
-                    class: "w-7 h-7 rounded-full border-2 border-slate-600 hover:border-blue-500 hover:bg-blue-500/10 flex items-center justify-center transition-colors flex-shrink-0 cursor-pointer" do %>
-                <% end %>
-              <% else %>
-                <span class="w-7 h-7 rounded-full border-2 border-slate-600 flex-shrink-0"></span>
-              <% end %>
-            <% end %>
-
-            <!-- Objective Details -->
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2">
-                <span class="text-slate-300 <%= objective.completed? ? 'line-through text-slate-500' : '' %>">
-                  <%= objective.description %>
-                </span>
-                <!-- Status Badge -->
-                <span class="font-mono text-xs px-2 py-0.5 rounded <%= objective_status_color(objective.status) %>">
-                  <%= objective.status&.upcase || 'PENDING' %>
-                </span>
-              </div>
-              <% if objective.skill_name.present? %>
-                <span class="block text-xs text-slate-500 mt-1">
-                  Skill: <%= objective.skill_name %>
-                </span>
-              <% end %>
-              <% if objective.started_at.present? && !objective.completed? %>
-                <span class="block text-xs text-slate-600 mt-1">
-                  Started <%= time_ago_in_words(objective.started_at) %> ago
-                </span>
-              <% end %>
-            </div>
-
-            <!-- XP and Actions -->
-            <div class="flex items-center gap-3 text-xs font-mono">
-              <span class="text-slate-500">Lv.<%= objective.difficulty %></span>
-              <span class="<%= objective.completed? ? 'text-emerald-400' : 'text-slate-500' %>">
-                +<%= objective.xp_reward %> XP
-              </span>
-              <% if @mission.status == "standby" %>
-                <%= button_to mission_objective_path(@mission, objective), method: :delete,
-                    data: { turbo_confirm: "Remove this objective?" },
-                    class: "text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity" do %>
-                  ✕
-                <% end %>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-
       <!-- Legend -->
       <div class="mt-4 pt-4 border-t border-slate-700 flex items-center gap-6 text-xs text-slate-500">
         <div class="flex items-center gap-2">

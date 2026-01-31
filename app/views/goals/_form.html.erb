@@ -20,7 +20,7 @@
     <%= f.text_area :content, rows: 4, class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500", placeholder: "Describe your goal in detail. Be specific about what you want to achieve..." %>
   </div>
 
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-3 gap-4">
     <div>
       <%= f.label :goal_type, "Type", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
       <%= f.select :goal_type, [["Career", "career"], ["Financial", "financial"], ["Personal", "personal"], ["Health", "health"], ["Learning", "learning"], ["Other", "other"]], { include_blank: "Select type" }, { class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500" } %>
@@ -30,6 +30,26 @@
       <%= f.label :timeframe, "Timeframe", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
       <%= f.select :timeframe, [["Short-term (< 3 months)", "short_term"], ["Medium-term (3-12 months)", "medium_term"], ["Long-term (1+ years)", "long_term"]], { include_blank: "Select timeframe" }, { class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500" } %>
     </div>
+
+    <div>
+      <%= f.label :priority, "Priority", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
+      <%= f.select :priority, [["\u{1F7E2} 1 - Low", 1], ["\u{1F7E1} 2 - Medium", 2], ["\u{1F7E0} 3 - High", 3], ["\u{1F534} 4 - Very High", 4], ["\u{1F525} 5 - Critical", 5]], { include_blank: "Select priority" }, { class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500" } %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :context, "Additional Context", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
+    <%= f.text_area :context, rows: 3, class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500", placeholder: "Any background information that might help understand your goal better..." %>
+  </div>
+
+  <div>
+    <%= f.label :success_criteria, "Success Criteria", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
+    <%= f.text_area :success_criteria, rows: 3, class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500", placeholder: "How will you know when you've achieved this goal? What does success look like?" %>
+  </div>
+
+  <div>
+    <%= f.label :current_blockers, "Current Blockers", class: "block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2" %>
+    <%= f.text_area :current_blockers, rows: 3, class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono focus:outline-none focus:border-blue-500", placeholder: "What's currently stopping you from achieving this goal? Any obstacles or challenges?" %>
   </div>
 
   <div class="flex items-center gap-4">

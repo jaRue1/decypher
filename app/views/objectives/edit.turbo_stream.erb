@@ -1,0 +1,34 @@
+<%= turbo_stream.replace dom_id(@objective) do %>
+  <div id="<%= dom_id(@objective) %>" class="p-4 bg-slate-800 rounded border border-blue-500">
+    <%= form_with model: [@mission, @objective], class: "space-y-3" do |f| %>
+      <div>
+        <label class="block font-mono text-xs text-slate-400 mb-1">Description</label>
+        <%= f.text_field :description,
+            class: "w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-slate-100 font-mono text-sm focus:outline-none focus:border-blue-500",
+            autofocus: true %>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-mono text-xs text-slate-400 mb-1">Difficulty</label>
+          <%= f.select :difficulty,
+              [["Lv.1 (25 XP)", 1], ["Lv.2 (50 XP)", 2], ["Lv.3 (75 XP)", 3], ["Lv.4 (100 XP)", 4]],
+              {},
+              class: "w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-slate-100 font-mono text-sm focus:outline-none focus:border-blue-500" %>
+        </div>
+        <div>
+          <label class="block font-mono text-xs text-slate-400 mb-1">Skill (optional)</label>
+          <%= f.text_field :skill_name,
+              placeholder: "Skill gained",
+              class: "w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-slate-100 font-mono text-sm focus:outline-none focus:border-blue-500" %>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <%= link_to "Cancel", mission_path(@mission),
+            class: "font-mono text-xs text-slate-400 hover:text-slate-300 px-3 py-1.5",
+            data: { turbo_frame: "_top" } %>
+        <%= f.submit "Save",
+            class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs px-4 py-1.5 rounded transition-colors cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

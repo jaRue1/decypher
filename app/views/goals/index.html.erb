@@ -20,13 +20,23 @@
             <% goals.each do |goal| %>
               <div class="flex items-start justify-between p-4 bg-slate-800 rounded">
                 <div class="flex-1">
-                  <p class="text-slate-100"><%= goal.content %></p>
-                  <div class="flex items-center gap-3 mt-2">
+                  <div class="flex items-start gap-3">
+                    <% if goal.priority.present? %>
+                      <span class="font-mono text-xs px-2 py-0.5 rounded <%= priority_color(goal.priority) %>">
+                        P<%= goal.priority %>
+                      </span>
+                    <% end %>
+                    <p class="text-slate-100"><%= goal.content %></p>
+                  </div>
+                  <div class="flex items-center gap-3 mt-2 <%= goal.priority.present? ? 'ml-10' : '' %>">
                     <% if goal.goal_type.present? %>
-                      <span class="font-mono text-xs text-slate-500"><%= goal.goal_type %></span>
+                      <span class="font-mono text-xs text-slate-500"><%= goal.goal_type.humanize %></span>
                     <% end %>
                     <% if goal.timeframe.present? %>
-                      <span class="font-mono text-xs text-slate-500"><%= goal.timeframe %></span>
+                      <span class="font-mono text-xs text-slate-500"><%= goal.timeframe.humanize %></span>
+                    <% end %>
+                    <% if goal.success_criteria.present? %>
+                      <span class="font-mono text-xs text-emerald-500" title="<%= goal.success_criteria %>">Has criteria</span>
                     <% end %>
                   </div>
                 </div>

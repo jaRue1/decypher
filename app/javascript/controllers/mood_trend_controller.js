@@ -11,9 +11,16 @@ export default class extends Controller {
 
   connect() {
     this.renderChart()
+
+    // Watch for container resize (e.g., sidebar toggle)
+    this.resizeObserver = new ResizeObserver(() => {
+      if (this.chart) this.chart.resize()
+    })
+    this.resizeObserver.observe(this.element)
   }
 
   disconnect() {
+    if (this.resizeObserver) this.resizeObserver.disconnect()
     if (this.chart) {
       this.chart.destroy()
     }

@@ -1,0 +1,53 @@
+<div class="p-8 max-w-xl">
+  <div class="mb-6">
+    <%= link_to profile_path, class: "font-mono text-xs text-slate-500 hover:text-slate-300" do %>
+      <- Back to Profile
+    <% end %>>
+
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+    <h1 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-6">Edit Profile</h1>
+
+    <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-6" do |f| %>
+      <% if @user.errors.any? %>
+        <div class="bg-red-900/20 border border-red-700 rounded p-4">
+          <p class="font-mono text-xs text-red-400 mb-2"><%= pluralize(@user.errors.count, "error") %> prevented saving:</p>
+          <ul class="list-disc list-inside text-red-400 text-xs font-mono">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <label class="block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">
+          Username
+        </label>
+        <%= f.text_field :username,
+            placeholder: "Choose a username",
+            class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono text-sm focus:outline-none focus:border-blue-500" %>
+        <p class="font-mono text-xs text-slate-500 mt-2">
+          3-30 characters. Letters, numbers, and underscores only.
+        </p>
+      </div>
+
+      <div>
+        <label class="block font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">
+          Email
+        </label>
+        <p class="font-mono text-sm text-slate-400 bg-slate-800 border border-slate-700 rounded px-4 py-3">
+          <%= @user.email_address %>
+        </p>
+        <p class="font-mono text-xs text-slate-500 mt-2">
+          Email cannot be changed.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-4 pt-4">
+        <%= f.submit "Save Changes",
+            class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-6 py-2 rounded transition-colors cursor-pointer" %>
+        <%= link_to "Cancel", profile_path, class: "font-mono text-sm text-slate-400 hover:text-slate-300" %>
+      </div>
+    <% end %>
+  </div>
+</div>

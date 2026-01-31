@@ -3,6 +3,12 @@
 class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
+
+  validates :username,
+            uniqueness: { case_sensitive: false },
+            length: { minimum: 3, maximum: 30 },
+            format: { with: /\A[a-zA-Z0-9_]+\z/, message: 'can only contain letters, numbers, and underscores' },
+            allow_blank: true
   has_many :user_domains, dependent: :destroy
   has_many :domains, through: :user_domains
   has_many :missions, dependent: :destroy
@@ -13,6 +19,7 @@ class User < ApplicationRecord
   has_many :daily_entries, dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
+  normalizes :username, with: ->(u) { u&.strip&.downcase }
 
   # Calculate power level (sum of all domain levels)
   def power_level

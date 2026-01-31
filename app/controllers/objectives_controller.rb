@@ -2,16 +2,31 @@
 
 class ObjectivesController < ApplicationController
   before_action :set_mission
-  before_action :set_objective, only: %i[update destroy toggle start]
+  before_action :set_objective, only: %i[edit update destroy toggle start]
 
   def create
     @objective = @mission.objectives.build(objective_params)
     @objective.status = 'pending'
 
     if @objective.save
-      redirect_to @mission, notice: 'Objective added.'
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @mission, notice: 'Objective added.' }
+      end
     else
       redirect_to @mission, alert: 'Failed to add objective.'
+    end
+  end
+
+  def edit
+    unless %w[standby active].include?(@mission.status)
+      redirect_to @mission, alert: 'Cannot edit objectives on a completed mission.'
+      return
+    end
+
+    respond_to do |format|
+      format.html { redirect_to @mission }
+      format.turbo_stream
     end
   end
 
@@ -27,11 +42,15 @@ class ObjectivesController < ApplicationController
   end
 
   def destroy
-    if @mission.status == 'standby'
-      @objective.destroy
-      redirect_to @mission, notice: 'Objective removed.'
-    else
-      redirect_to @mission, alert: 'Cannot remove objectives from an active mission.'
+    unless %w[standby active].include?(@mission.status)
+      redirect_to @mission, alert: 'Cannot remove objectives from a completed mission.'
+      return
+    end
+
+    @objective.destroy
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to @mission, notice: 'Objective removed.' }
     end
   end
 
@@ -57,29 +76,34 @@ class ObjectivesController < ApplicationController
     end
 
     # Cycle through: pending → active → completed → active
+    success = false
+    notice = nil
+
     if @objective.pending?
       if @objective.start!
-        redirect_to @mission, notice: 'Objective started.'
-      else
-        redirect_to @mission, alert: 'Failed to start objective.'
+        success = true
+        notice = 'Objective started.'
       end
     elsif @objective.status == 'active'
       if @objective.complete!
-        if @mission.reload.status == 'completed'
-          redirect_to @mission, notice: 'Objective completed! Mission accomplished!'
-        else
-          redirect_to @mission, notice: "Objective completed. +#{@objective.xp_reward} XP"
-        end
-      else
-        redirect_to @mission, alert: 'Failed to complete objective.'
+        success = true
+        @mission.reload
+        notice = @mission.status == 'completed' ? 'Objective completed! Mission accomplished!' : "Objective completed. +#{@objective.xp_reward} XP"
       end
     elsif @objective.completed?
-      # Uncomplete - move back to active
       if @objective.uncomplete!
-        redirect_to @mission, notice: 'Objective marked as in progress.'
-      else
-        redirect_to @mission, alert: 'Failed to update objective.'
+        success = true
+        notice = 'Objective marked as in progress.'
       end
+    end
+
+    if success
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @mission, notice: notice }
+      end
+    else
+      redirect_to @mission, alert: 'Failed to update objective.'
     end
   end
 

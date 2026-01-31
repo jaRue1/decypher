@@ -14,9 +14,17 @@ export default class extends Controller {
   connect() {
     this.renderBarChart()
     this.renderDonutChart()
+
+    // Watch for container resize (e.g., sidebar toggle)
+    this.resizeObserver = new ResizeObserver(() => {
+      if (this.barChartInstance) this.barChartInstance.resize()
+      if (this.donutChartInstance) this.donutChartInstance.resize()
+    })
+    this.resizeObserver.observe(this.element)
   }
 
   disconnect() {
+    if (this.resizeObserver) this.resizeObserver.disconnect()
     if (this.barChartInstance) this.barChartInstance.destroy()
     if (this.donutChartInstance) this.donutChartInstance.destroy()
   }
