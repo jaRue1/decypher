@@ -1,0 +1,56 @@
+<div class="space-y-6" data-controller="operator" data-operator-url-value="<%= generate_plan_domain_path(domain.slug) %>">
+  <% if domain_setup.plan_generated? %>
+    <!-- Plan already generated, show preview link -->
+    <div class="bg-slate-900 border border-emerald-700 rounded-lg p-6 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 bg-emerald-500/20 rounded-full flex items-center justify-center">
+        <span class="text-3xl">✓</span>
+      </div>
+      <h3 class="font-mono text-lg text-emerald-400 mb-2">Plan Generated</h3>
+      <p class="text-slate-400 mb-4">The Operator has created your personalized learning plan.</p>
+      <%= link_to "Review Your Plan", preview_plan_domain_path(domain.slug),
+          class: "inline-block bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-wide text-sm px-6 py-2 rounded transition-colors" %>
+    </div>
+  <% else %>
+    <!-- Generate plan -->
+    <div class="bg-slate-900 border border-slate-700 rounded-lg p-6 text-center" id="generate_plan_container">
+      <div class="w-16 h-16 mx-auto mb-4 bg-blue-500/20 rounded-full flex items-center justify-center">
+        <span class="text-3xl">🤖</span>
+      </div>
+      <h3 class="font-mono text-lg text-slate-100 mb-2">Ready to Generate Your Plan</h3>
+      <p class="text-slate-400 mb-4">The Operator will analyze your goals and create a personalized learning journey.</p>
+
+      <%= form_with url: generate_plan_domain_path(domain.slug), method: :post, data: { turbo_frame: "_top" } do |f| %>
+        <%= f.submit "Generate with The Operator",
+            class: "bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-wide text-sm px-6 py-2 rounded transition-colors cursor-pointer",
+            data: { operator_target: "button" } %>
+      <% end %>
+
+      <!-- Loading state (hidden by default) -->
+      <div class="hidden mt-6" data-operator-target="loading">
+        <div class="animate-pulse">
+          <div class="w-12 h-12 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p class="font-mono text-blue-400">The Operator is analyzing your goals...</p>
+          <p class="text-slate-500 text-sm mt-2">This may take up to 30 seconds</p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Summary of inputs -->
+  <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 space-y-4">
+    <div>
+      <h4 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Your Goals</h4>
+      <p class="text-slate-300 text-sm"><%= domain_setup.goals_input&.truncate(150) %></p>
+    </div>
+    <% if domain_setup.blockers_input.present? %>
+      <div>
+        <h4 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Blockers</h4>
+        <p class="text-slate-300 text-sm"><%= domain_setup.blockers_input.truncate(100) %></p>
+      </div>
+    <% end %>
+    <div>
+      <h4 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Background</h4>
+      <p class="text-slate-300 text-sm"><%= domain_setup.background_input&.truncate(150) %></p>
+    </div>
+  </div>
+</div>

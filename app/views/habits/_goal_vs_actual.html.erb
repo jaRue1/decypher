@@ -1,0 +1,21 @@
+<div id="habits_goal_vs_actual" class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+  <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Goal vs Actual</h3>
+  <div class="space-y-4">
+    <% habits.each do |habit| %>
+      <%
+        actual = habit.completed_days_for_month(date)
+        goal = habit.target_days_per_month || 30
+        progress = [(actual.to_f / goal * 100), 100].min.round(0)
+      %>
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <span class="font-mono text-xs text-slate-400 truncate max-w-[100px]"><%= habit.name %></span>
+          <span class="font-mono text-xs text-slate-500"><%= actual %>/<%= goal %></span>
+        </div>
+        <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+          <div class="h-full <%= progress >= 100 ? 'bg-emerald-500' : progress >= 70 ? 'bg-blue-500' : 'bg-amber-500' %> transition-all" style="width: <%= progress %>%"></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div id="habits_current_streaks" class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+  <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Current Streaks</h3>
+  <div class="space-y-3">
+    <% habits.sort_by { |h| -h.current_streak }.each do |habit| %>
+      <div class="flex items-center justify-between">
+        <span class="font-mono text-xs text-slate-400 truncate max-w-[100px]"><%= habit.name %></span>
+        <div class="flex items-center gap-2">
+          <% if habit.current_streak > 0 %>
+            <span class="font-mono text-sm text-amber-400"><%= habit.current_streak %></span>
+            <span class="text-amber-400">🔥</span>
+          <% else %>
+            <span class="font-mono text-xs text-slate-600">--</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

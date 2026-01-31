@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  LEVEL_TITLES = {
+    1 => 'Beginner',
+    2 => 'Beginner',
+    3 => 'Novice',
+    4 => 'Novice',
+    5 => 'Intermediate',
+    6 => 'Intermediate',
+    7 => 'Advanced',
+    8 => 'Advanced',
+    9 => 'Expert',
+    10 => 'Master'
+  }.freeze
+
+  def level_title(level)
+    LEVEL_TITLES[level.to_i] || 'Unknown'
+  end
+
   def priority_color(priority)
     case priority
     when 1 then 'bg-emerald-900/50 text-emerald-400'

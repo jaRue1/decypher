@@ -1,0 +1,9 @@
+<div id="habits_monthly_progress" class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+  <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">Monthly Progress</h3>
+  <div class="mb-4">
+    <div class="h-3 bg-slate-800 rounded-full overflow-hidden">
+      <div class="h-full bg-gradient-to-r from-blue-600 to-emerald-400 transition-all" style="width: <%= stats[:percentage] %>%"></div>
+    </div>
+    <p class="font-mono text-right text-xs text-slate-500 mt-1"><%= stats[:completed_count] %> / <%= stats[:total_possible] %></p>
+  </div>
+</div>

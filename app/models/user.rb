@@ -11,6 +11,7 @@ class User < ApplicationRecord
             allow_blank: true
   has_many :user_domains, dependent: :destroy
   has_many :domains, through: :user_domains
+  has_many :domain_setups, dependent: :destroy
   has_many :missions, dependent: :destroy
   has_many :skills, dependent: :destroy
   has_many :goals, dependent: :destroy

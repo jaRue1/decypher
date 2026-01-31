@@ -3,6 +3,7 @@
 class Domain < ApplicationRecord
   has_many :user_domains, dependent: :destroy
   has_many :users, through: :user_domains
+  has_many :domain_setups, dependent: :destroy
   has_many :missions, dependent: :destroy
   has_many :skills, dependent: :destroy
   has_many :goals, dependent: :nullify

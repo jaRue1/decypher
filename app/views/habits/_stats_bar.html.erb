@@ -1,0 +1,18 @@
+<div id="habits_stats_bar" class="grid grid-cols-4 gap-4">
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+    <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Habits</span>
+    <span class="font-mono text-2xl text-slate-100"><%= stats[:total_habits] %></span>
+  </div>
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+    <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Completed</span>
+    <span class="font-mono text-2xl text-emerald-400"><%= stats[:completed_count] %></span>
+  </div>
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+    <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Possible</span>
+    <span class="font-mono text-2xl text-slate-300"><%= stats[:total_possible] %></span>
+  </div>
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+    <span class="font-mono text-xs uppercase tracking-widest text-slate-500 block">Progress</span>
+    <span class="font-mono text-2xl text-blue-400"><%= stats[:percentage] %>%</span>
+  </div>
+</div>

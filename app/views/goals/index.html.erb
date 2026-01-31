@@ -18,40 +18,7 @@
           </h2>
           <div class="space-y-3">
             <% goals.each do |goal| %>
-              <div class="flex items-start justify-between p-4 bg-slate-800 rounded">
-                <div class="flex-1">
-                  <div class="flex items-start gap-3">
-                    <% if goal.priority.present? %>
-                      <span class="font-mono text-xs px-2 py-0.5 rounded <%= priority_color(goal.priority) %>">
-                        P<%= goal.priority %>
-                      </span>
-                    <% end %>
-                    <p class="text-slate-100"><%= goal.content %></p>
-                  </div>
-                  <div class="flex items-center gap-3 mt-2 <%= goal.priority.present? ? 'ml-10' : '' %>">
-                    <% if goal.goal_type.present? %>
-                      <span class="font-mono text-xs text-slate-500"><%= goal.goal_type.humanize %></span>
-                    <% end %>
-                    <% if goal.timeframe.present? %>
-                      <span class="font-mono text-xs text-slate-500"><%= goal.timeframe.humanize %></span>
-                    <% end %>
-                    <% if goal.success_criteria.present? %>
-                      <span class="font-mono text-xs text-emerald-500" title="<%= goal.success_criteria %>">Has criteria</span>
-                    <% end %>
-                  </div>
-                </div>
-                <div class="flex items-center gap-2 ml-4">
-                  <%= link_to "Edit", edit_goal_path(goal), class: "font-mono text-xs text-slate-400 hover:text-white" %>
-                  <div data-controller="confirm">
-                    <%= button_to goal_path(goal), method: :delete,
-                        data: { action: "click->confirm#open" },
-                        class: "font-mono text-xs text-red-400 hover:text-red-300" do %>
-                      Delete
-                    <% end %>
-                    <%= render "shared/confirm_modal" %>
-                  </div>
-                </div>
-              </div>
+              <%= render partial: "goals/goal", locals: { goal: goal } %>
             <% end %>
           </div>
         </div>

@@ -1,0 +1,13 @@
+<%= turbo_stream.replace "save_indicator" do %>
+  <div id="save_indicator" class="font-mono text-xs text-emerald-400 transition-opacity" data-controller="fade-out">
+    Saved!
+  </div>
+<% end %>
+
+<%= turbo_stream.replace "mood_trend" do %>
+  <%= render partial: "daily_entries/mood_trend", locals: {
+    trend_labels: @trend_labels,
+    trend_mood_data: @trend_mood_data,
+    trend_motivation_data: @trend_motivation_data
+  } %>
+<% end %>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GoalsController < ApplicationController
-  before_action :set_goal, only: %i[show edit update destroy]
+  before_action :set_goal, only: %i[show edit update destroy complete generate_missions]
 
   def index
     @goals = Current.user.goals.includes(:domain)
@@ -43,6 +43,29 @@ class GoalsController < ApplicationController
   def destroy
     @goal.destroy
     redirect_to goals_path, notice: 'Goal deleted.'
+  end
+
+  def complete
+    @goal.update(status: 'completed')
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to goals_path, notice: 'Goal completed!' }
+    end
+  end
+
+  def generate_missions
+    generator = Operator::MissionGenerator.new
+    @missions = generator.generate_from_goal(@goal)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to goals_path, notice: "#{@missions.count} missions generated for this goal!" }
+    end
+  rescue Operator::Base::ApiError, Operator::MissionGenerator::GenerationError => e
+    respond_to do |format|
+      format.turbo_stream { render :generate_missions_error, locals: { error: e.message } }
+      format.html { redirect_to goals_path, alert: "Mission generation failed: #{e.message}" }
+    end
   end
 
   private

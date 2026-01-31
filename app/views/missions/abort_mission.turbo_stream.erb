@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "mission_header" do %>
+  <%= render partial: "missions/mission_header", locals: { mission: @mission } %>
+<% end %>
+
+<%= turbo_stream.replace "objectives_section" do %>
+  <%= render partial: "missions/objectives_section", locals: { mission: @mission, objectives: @objectives } %>
+<% end %>

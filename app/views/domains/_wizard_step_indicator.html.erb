@@ -1,0 +1,26 @@
+<div id="wizard_step_indicator" class="mt-8 flex items-center justify-between">
+  <% steps = [['goals', '1. Goals'], ['background', '2. Background'], ['preview', '3. Review']] %>
+  <% current_index = steps.index { |s| s[0] == domain_setup.step }.to_i %>
+  <% steps.each_with_index do |(step_key, step_label), index| %>
+    <div class="flex items-center <%= 'flex-1' unless index == steps.length - 1 %>">
+      <div class="flex items-center">
+        <%
+          is_current = domain_setup.step == step_key
+          is_completed = domain_setup.completed? || current_index > index
+          bg_class = is_current ? 'bg-blue-600' : (is_completed ? 'bg-emerald-600' : 'bg-slate-700')
+        %>
+        <div class="<%= bg_class %> w-8 h-8 rounded-full flex items-center justify-center font-mono text-sm text-white">
+          <% if is_completed && !is_current %>
+            ✓
+          <% else %>
+            <%= index + 1 %>
+          <% end %>
+        </div>
+        <span class="ml-2 font-mono text-xs <%= is_current ? 'text-slate-200' : 'text-slate-400' %>"><%= step_label %></span>
+      </div>
+      <% unless index == steps.length - 1 %>
+        <div class="flex-1 h-px <%= current_index > index ? 'bg-emerald-600' : 'bg-slate-700' %> mx-4"></div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

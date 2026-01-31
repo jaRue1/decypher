@@ -1,0 +1,12 @@
+<div id="habits_today_progress" class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+  <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-3">Today's Progress</h3>
+  <div class="flex items-center gap-4 mb-2">
+    <div class="flex-1">
+      <div class="h-3 bg-slate-800 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-blue-600 to-emerald-400 transition-all rounded-full" style="width: <%= today_percentage %>%"></div>
+      </div>
+    </div>
+    <span class="font-mono text-lg <%= today_percentage >= 80 ? 'text-emerald-400' : today_percentage >= 50 ? 'text-amber-400' : 'text-slate-400' %>"><%= today_percentage %>%</span>
+  </div>
+  <p class="font-mono text-xs text-slate-500"><%= today_completed %> / <%= habits_count %> habits · <%= Date.current.strftime("%a, %b %d") %></p>
+</div>

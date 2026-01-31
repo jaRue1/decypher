@@ -71,7 +71,13 @@ class DailyEntriesController < ApplicationController
     @entry = Current.user.daily_entries.find_or_initialize_by(date: @date)
 
     if @entry.update(daily_entry_params)
-      redirect_to daily_entry_path(date: @date), notice: 'Entry saved.'
+      # Recalculate trend data for turbo_stream response
+      load_trend_data
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to daily_entry_path(date: @date), notice: 'Entry saved.' }
+      end
     else
       # Reload data for show view
       @habits = Current.user.habits.active.ordered
@@ -89,6 +95,26 @@ class DailyEntriesController < ApplicationController
   end
 
   private
+
+  def load_trend_data
+    week_start = @date.beginning_of_week(:monday)
+    week_end = week_start + 6.days
+    @trend_dates = (week_start..week_end).to_a
+
+    @recent_entries = Current.user.daily_entries
+                                  .where(date: week_start..week_end)
+                                  .order(:date)
+
+    @trend_labels = @trend_dates.map { |d| d.strftime('%a') }
+    @trend_mood_data = @trend_dates.map do |date|
+      entry = @recent_entries.find { |e| e.date == date }
+      entry&.mood_score
+    end
+    @trend_motivation_data = @trend_dates.map do |date|
+      entry = @recent_entries.find { |e| e.date == date }
+      entry&.motivation_score
+    end
+  end
 
   def daily_entry_params
     params.expect(daily_entry: %i[mood_score motivation_score wins improvements notes])

@@ -1,0 +1,16 @@
+<%= turbo_stream.replace "wizard_step_indicator" do %>
+  <%= render 'wizard_step_indicator', domain_setup: @domain_setup %>
+<% end %>
+
+<%= turbo_stream.replace "wizard_step" do %>
+  <turbo-frame id="wizard_step" class="block mt-8">
+    <% case @domain_setup.step %>
+    <% when 'goals' %>
+      <%= render 'wizard_step_goals', domain: @domain, domain_setup: @domain_setup %>
+    <% when 'background' %>
+      <%= render 'wizard_step_background', domain: @domain, domain_setup: @domain_setup %>
+    <% when 'preview' %>
+      <%= render 'wizard_step_preview', domain: @domain, domain_setup: @domain_setup %>
+    <% end %>
+  </turbo-frame>
+<% end %>

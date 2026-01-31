@@ -1,0 +1,34 @@
+<%= form_with url: save_step_domain_path(domain.slug), method: :post, data: { turbo_frame: "wizard_step" }, class: "space-y-6" do |f| %>
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+    <label for="goals_input" class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-3">
+      What do you want to achieve in <%= domain.name %>?
+    </label>
+    <textarea name="goals_input" id="goals_input" rows="4"
+      class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+      placeholder="I want to learn... I want to build... I want to master..."
+      required><%= domain_setup.goals_input %></textarea>
+    <p class="mt-2 text-slate-500 text-xs">Be specific about what success looks like for you.</p>
+  </div>
+
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+    <label for="blockers_input" class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-3">
+      What's currently blocking you?
+    </label>
+    <textarea name="blockers_input" id="blockers_input" rows="3"
+      class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+      placeholder="Time constraints, knowledge gaps, lack of resources..."><%= domain_setup.blockers_input %></textarea>
+    <p class="mt-2 text-slate-500 text-xs">Understanding your obstacles helps tailor the plan.</p>
+  </div>
+
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+    <label for="success_input" class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-3">
+      What does success look like?
+    </label>
+    <textarea name="success_input" id="success_input" rows="3"
+      class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+      placeholder="I'll know I've succeeded when..."><%= domain_setup.success_input %></textarea>
+  </div>
+
+  <%= f.submit "Continue →",
+      class: "w-full bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-wide text-sm px-4 py-2 rounded transition-colors cursor-pointer" %>
+<% end %>

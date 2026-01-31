@@ -8,13 +8,19 @@
 
       <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
         <label for="level" class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-3">
-          How would you rate yourself in <%= @domain.name %>? (1-6)
+          How would you rate yourself in <%= @domain.name %>? (1-10)
         </label>
-        <select name="level" id="level" class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 focus:outline-none
-  focus:border-blue-500">
-          <% @domain.level_titles.each do |level, title| %>
-            <option value="<%= level %>">L<%= level %> - <%= title %></option>
-          <% end %>
+        <select name="level" id="level" class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+          <option value="1">L1 - Beginner</option>
+          <option value="2">L2 - Beginner</option>
+          <option value="3">L3 - Novice</option>
+          <option value="4">L4 - Novice</option>
+          <option value="5">L5 - Intermediate</option>
+          <option value="6">L6 - Intermediate</option>
+          <option value="7">L7 - Advanced</option>
+          <option value="8">L8 - Advanced</option>
+          <option value="9">L9 - Expert</option>
+          <option value="10">L10 - Master</option>
         </select>
       </div>
 
@@ -23,8 +29,7 @@
           What's your current situation in <%= @domain.name %>?
         </label>
         <textarea name="responses[situation]" id="responses_situation" rows="3"
-          class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none
-  focus:border-blue-500"
+          class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
           placeholder="Describe where you are now..."></textarea>
       </div>
 
@@ -33,13 +38,11 @@
           What's your biggest goal in <%= @domain.name %>?
         </label>
         <textarea name="responses[goal]" id="responses_goal" rows="3"
-          class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none
-  focus:border-blue-500"
+          class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
           placeholder="What do you want to achieve..."></textarea>
       </div>
 
       <%= f.submit "Complete Setup",
-          class: "w-full bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-wide text-sm px-4 py-2 rounded
-  transition-colors cursor-pointer" %>
+          class: "w-full bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-wide text-sm px-4 py-2 rounded transition-colors cursor-pointer" %>
     <% end %>
   </div>

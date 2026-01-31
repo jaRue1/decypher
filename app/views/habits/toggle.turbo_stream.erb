@@ -1,3 +1,4 @@
+<%# Update the toggle button %>
 <%= turbo_stream.replace dom_id(@habit, @date) do %>
   <%= turbo_frame_tag dom_id(@habit, @date) do %>
     <%= button_to toggle_habit_path(@habit, date: @date),
@@ -11,4 +12,44 @@
       <% end %>
     <% end %>
   <% end %>
+<% end %>
+
+<%# Update stats bar %>
+<%= turbo_stream.replace "habits_stats_bar" do %>
+  <%= render partial: "habits/stats_bar", locals: { stats: @stats } %>
+<% end %>
+
+<%# Update weekly progress chart %>
+<%= turbo_stream.replace "habits_weekly_progress" do %>
+  <%= render partial: "habits/weekly_progress", locals: {
+    week_labels: @week_labels,
+    week_completed: @week_completed,
+    week_percentage: @week_percentage,
+    week_total_completed: @week_total_completed,
+    week_total_possible: @week_total_possible
+  } %>
+<% end %>
+
+<%# Update monthly progress %>
+<%= turbo_stream.replace "habits_monthly_progress" do %>
+  <%= render partial: "habits/monthly_progress", locals: { stats: @stats } %>
+<% end %>
+
+<%# Update today's progress %>
+<%= turbo_stream.replace "habits_today_progress" do %>
+  <%= render partial: "habits/today_progress", locals: {
+    today_completed: @today_completed,
+    today_percentage: @today_percentage,
+    habits_count: @habits.count
+  } %>
+<% end %>
+
+<%# Update goal vs actual %>
+<%= turbo_stream.replace "habits_goal_vs_actual" do %>
+  <%= render partial: "habits/goal_vs_actual", locals: { habits: @habits, date: @date } %>
+<% end %>
+
+<%# Update current streaks %>
+<%= turbo_stream.replace "habits_current_streaks" do %>
+  <%= render partial: "habits/current_streaks", locals: { habits: @habits } %>
 <% end %>

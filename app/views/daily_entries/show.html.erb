@@ -132,7 +132,8 @@
                 class: "w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 text-slate-100 font-mono text-sm focus:outline-none focus:border-blue-500 placeholder:text-slate-600" %>
           </div>
 
-          <div class="flex justify-end">
+          <div class="flex items-center justify-end gap-4">
+            <div id="save_indicator" class="font-mono text-xs text-emerald-400 opacity-0 transition-opacity"></div>
             <%= f.submit "Save Entry", class: "bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm px-6 py-2 rounded transition-colors cursor-pointer" %>
           </div>
         <% end %>
@@ -178,16 +179,11 @@
       </div>
 
       <!-- Mood & Motivation Trend -->
-      <div class="bg-slate-900 border border-slate-700 rounded-lg p-6"
-           data-controller="mood-trend"
-           data-mood-trend-labels-value="<%= @trend_labels.to_json %>"
-           data-mood-trend-mood-data-value="<%= @trend_mood_data.to_json %>"
-           data-mood-trend-motivation-data-value="<%= @trend_motivation_data.to_json %>">
-        <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">7-Day Trend</h3>
-        <div class="h-40">
-          <canvas data-mood-trend-target="chart"></canvas>
-        </div>
-      </div>
+      <%= render partial: "daily_entries/mood_trend", locals: {
+        trend_labels: @trend_labels,
+        trend_mood_data: @trend_mood_data,
+        trend_motivation_data: @trend_motivation_data
+      } %>
 
       <!-- Quick Links -->
       <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">

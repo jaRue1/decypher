@@ -1,0 +1,10 @@
+<div id="mood_trend" class="bg-slate-900 border border-slate-700 rounded-lg p-6"
+     data-controller="mood-trend"
+     data-mood-trend-labels-value="<%= trend_labels.to_json %>"
+     data-mood-trend-mood-data-value="<%= trend_mood_data.to_json %>"
+     data-mood-trend-motivation-data-value="<%= trend_motivation_data.to_json %>">
+  <h3 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-4">7-Day Trend</h3>
+  <div class="h-40">
+    <canvas data-mood-trend-target="chart"></canvas>
+  </div>
+</div>

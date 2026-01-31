@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MissionsController < ApplicationController
-  before_action :set_mission, only: %i[show edit update destroy commence abort_mission]
+  before_action :set_mission, only: %i[show edit update destroy commence abort_mission generate_next generate_habits]
 
   def index
     @missions = Current.user.missions.includes(:domain, :objectives).order(created_at: :desc)
@@ -57,10 +57,12 @@ class MissionsController < ApplicationController
     resuming = @mission.status == 'aborted'
 
     if @mission.commence!
-      if resuming
-        redirect_to @mission, notice: 'Mission resumed. Welcome back, operator.'
-      else
-        redirect_to @mission, notice: 'Mission commenced. Good luck, operator.'
+      @objectives = @mission.objectives.order(:position)
+      notice = resuming ? 'Mission resumed. Welcome back, operator.' : 'Mission commenced. Good luck, operator.'
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @mission, notice: notice }
       end
     else
       redirect_to @mission, alert: 'Cannot commence this mission.'
@@ -70,10 +72,46 @@ class MissionsController < ApplicationController
   # POST /missions/:id/abort
   def abort_mission
     if @mission.abort!
-      redirect_to missions_path, notice: 'Mission aborted.'
+      @objectives = @mission.objectives.order(:position)
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @mission, notice: 'Mission aborted.' }
+      end
     else
       redirect_to @mission, alert: 'Cannot abort this mission.'
     end
+  end
+
+  # POST /missions/:id/generate_next
+  def generate_next
+    unless @mission.status == 'completed'
+      redirect_to @mission, alert: 'Complete this mission first to generate the next one.'
+      return
+    end
+
+    generator = Operator::MissionGenerator.new
+    @next_mission = generator.generate_next(@mission)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to @next_mission, notice: 'Next mission generated!' }
+    end
+  rescue Operator::Base::ApiError, Operator::MissionGenerator::GenerationError => e
+    respond_to do |format|
+      format.turbo_stream { render :generate_next_error, locals: { error: e.message } }
+      format.html { redirect_to @mission, alert: "Mission generation failed: #{e.message}" }
+    end
+  end
+
+  # POST /missions/:id/generate_habits
+  def generate_habits
+    generator = Operator::HabitGenerator.new
+    @habits = generator.generate_for_mission(@mission)
+
+    redirect_to @mission, notice: "#{@habits.count} habits generated to support this mission!"
+  rescue Operator::Base::ApiError, Operator::HabitGenerator::GenerationError => e
+    redirect_to @mission, alert: "Habit generation failed: #{e.message}"
   end
 
   private

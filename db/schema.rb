@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_30_234412) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_31_010235) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_234412) do
     t.text "wins"
     t.index ["user_id", "date"], name: "index_daily_entries_on_user_id_and_date", unique: true
     t.index ["user_id"], name: "index_daily_entries_on_user_id"
+  end
+
+  create_table "domain_setups", force: :cascade do |t|
+    t.text "background_input"
+    t.text "blockers_input"
+    t.datetime "created_at", null: false
+    t.bigint "domain_id", null: false
+    t.jsonb "generated_plan", default: {}
+    t.text "goals_input"
+    t.string "step", default: "goals"
+    t.text "success_input"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["domain_id"], name: "index_domain_setups_on_domain_id"
+    t.index ["user_id", "domain_id"], name: "index_domain_setups_on_user_id_and_domain_id", unique: true
+    t.index ["user_id"], name: "index_domain_setups_on_user_id"
   end
 
   create_table "domains", force: :cascade do |t|
@@ -199,6 +215,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_30_234412) do
   add_foreign_key "achievements", "users"
   add_foreign_key "badges", "missions"
   add_foreign_key "daily_entries", "users"
+  add_foreign_key "domain_setups", "domains"
+  add_foreign_key "domain_setups", "users"
   add_foreign_key "goals", "domains"
   add_foreign_key "goals", "users"
   add_foreign_key "habit_logs", "habits"

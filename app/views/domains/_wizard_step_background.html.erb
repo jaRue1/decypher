@@ -1,0 +1,26 @@
+<%= form_with url: save_step_domain_path(domain.slug), method: :post, data: { turbo_frame: "wizard_step" }, class: "space-y-6" do |f| %>
+  <div class="bg-slate-900 border border-slate-700 rounded-lg p-6">
+    <label for="background_input" class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-3">
+      Tell me about your background and experience
+    </label>
+    <textarea name="background_input" id="background_input" rows="5"
+      class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+      placeholder="What's your current skill level? What have you already learned or tried? How much time can you dedicate?"
+      required><%= domain_setup.background_input %></textarea>
+    <p class="mt-2 text-slate-500 text-xs">Include relevant experience, available time, and learning preferences.</p>
+  </div>
+
+  <!-- Summary of previous inputs -->
+  <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+    <h4 class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-3">Your Goals</h4>
+    <p class="text-slate-300 text-sm"><%= domain_setup.goals_input&.truncate(200) %></p>
+  </div>
+
+  <div class="flex gap-4">
+    <%= link_to "← Back", setup_wizard_domain_path(domain.slug, back_to: 'goals'),
+        class: "flex-1 text-center bg-slate-700 hover:bg-slate-600 text-white font-mono uppercase tracking-wide text-sm px-4 py-2 rounded transition-colors",
+        data: { turbo_method: :delete, turbo_confirm: "Go back and edit your goals?" } %>
+    <%= f.submit "Generate Plan →",
+        class: "flex-1 bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-wide text-sm px-4 py-2 rounded transition-colors cursor-pointer" %>
+  </div>
+<% end %>

@@ -13,12 +13,21 @@ Rails.application.routes.draw do
       get :setup
       post :complete_setup
       delete :reset
+      # Operator wizard routes
+      get :setup_wizard
+      post :save_step
+      post :generate_plan
+      get :preview_plan
+      post :confirm_plan
+      delete :reset_setup
     end
   end
   resources :missions do
     member do
       post :commence
       post :abort_mission
+      post :generate_next
+      post :generate_habits
     end
     resources :objectives, only: %i[create edit update destroy] do
       member do
@@ -27,10 +36,16 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :goals
+  resources :goals do
+    member do
+      post :complete
+      post :generate_missions
+    end
+  end
   resources :habits do
     member do
       post :toggle
+      post :archive
     end
   end
   resources :daily_entries, param: :date, only: %i[index show update]
