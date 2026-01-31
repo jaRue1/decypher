@@ -27,7 +27,7 @@ class DomainsController < ApplicationController
       user_domain.destroy
       redirect_to domain_path(@domain.slug), notice: "#{@domain.name} has been reset."
     else
-      redirect_to domain_path(@domain.slug), alert: 'Nothing to reset.'
+      redirect_to domain_path(@domain.slug), alert: "Nothing to reset."
     end
   end
 
@@ -41,16 +41,16 @@ class DomainsController < ApplicationController
     @domain_setup = Current.user.domain_setups.find_by!(domain: @domain)
 
     case @domain_setup.step
-    when 'goals'
+    when "goals"
       @domain_setup.update!(
         goals_input: params[:goals_input],
         blockers_input: params[:blockers_input],
         success_input: params[:success_input]
       )
-      @domain_setup.advance_to!('background')
-    when 'background'
+      @domain_setup.advance_to!("background")
+    when "background"
       @domain_setup.update!(background_input: params[:background_input])
-      @domain_setup.advance_to!('preview')
+      @domain_setup.advance_to!("preview")
     end
 
     respond_to do |format|
@@ -76,7 +76,7 @@ class DomainsController < ApplicationController
     @domain_setup = Current.user.domain_setups.find_by!(domain: @domain)
 
     unless @domain_setup.plan_generated?
-      redirect_to setup_wizard_domain_path(@domain.slug), alert: 'No plan generated yet.'
+      redirect_to setup_wizard_domain_path(@domain.slug), alert: "No plan generated yet."
       return
     end
 
@@ -102,7 +102,7 @@ class DomainsController < ApplicationController
     domain_setup = Current.user.domain_setups.find_by(domain: @domain)
     domain_setup&.destroy
 
-    redirect_to setup_wizard_domain_path(@domain.slug), notice: 'Setup has been reset.'
+    redirect_to setup_wizard_domain_path(@domain.slug), notice: "Setup has been reset."
   end
 
   private

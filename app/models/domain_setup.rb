@@ -9,19 +9,19 @@ class DomainSetup < ApplicationRecord
   validates :step, inclusion: { in: STEPS }
 
   def goals_step?
-    step == 'goals'
+    step == "goals"
   end
 
   def background_step?
-    step == 'background'
+    step == "background"
   end
 
   def preview_step?
-    step == 'preview'
+    step == "preview"
   end
 
   def completed?
-    step == 'completed'
+    step == "completed"
   end
 
   def advance_to!(next_step)
@@ -29,6 +29,6 @@ class DomainSetup < ApplicationRecord
   end
 
   def plan_generated?
-    generated_plan.present? && generated_plan['goals'].present?
+    generated_plan.present? && generated_plan["goals"].present?
   end
 end

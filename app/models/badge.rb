@@ -7,6 +7,6 @@ class Badge < ApplicationRecord
 
   # Check if badge is earned (mission completed)
   def earned?
-    mission.status == 'completed'
+    mission.status == "completed"
   end
 end

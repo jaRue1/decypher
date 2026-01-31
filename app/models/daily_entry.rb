@@ -14,19 +14,19 @@ class DailyEntry < ApplicationRecord
 
   def mood_label
     case mood_score
-    when 1..3 then 'Low'
-    when 4..6 then 'Moderate'
-    when 7..8 then 'Good'
-    when 9..10 then 'Excellent'
+    when 1..3 then "Low"
+    when 4..6 then "Moderate"
+    when 7..8 then "Good"
+    when 9..10 then "Excellent"
     end
   end
 
   def motivation_label
     case motivation_score
-    when 1..3 then 'Low'
-    when 4..6 then 'Moderate'
-    when 7..8 then 'High'
-    when 9..10 then 'Peak'
+    when 1..3 then "Low"
+    when 4..6 then "Moderate"
+    when 7..8 then "High"
+    when 9..10 then "Peak"
     end
   end
 end

@@ -11,18 +11,17 @@ class Goal < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }, allow_nil: true
   validates :priority, inclusion: { in: PRIORITIES }, allow_nil: true
 
-  scope :active, -> { where(status: 'active') }
-  scope :completed, -> { where(status: 'completed') }
+  scope :active, -> { where(status: "active") }
+  scope :completed, -> { where(status: "completed") }
   scope :for_domain, ->(domain) { where(domain: domain) }
 
   # Complete the goal
   def complete!
-    update!(status: 'completed')
+    update!(status: "completed")
   end
 
   # Archive the goal
   def archive!
-    update!(status: 'archived')
+    update!(status: "archived")
   end
-
 end

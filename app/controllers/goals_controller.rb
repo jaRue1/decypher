@@ -21,10 +21,10 @@ class GoalsController < ApplicationController
 
   def create
     @goal = Current.user.goals.build(goal_params)
-    @goal.status = 'active'
+    @goal.status = "active"
 
     if @goal.save
-      redirect_to goals_path, notice: 'Goal created.'
+      redirect_to goals_path, notice: "Goal created."
     else
       @domains = Domain.ordered
       render :new, status: :unprocessable_content
@@ -33,7 +33,7 @@ class GoalsController < ApplicationController
 
   def update
     if @goal.update(goal_params)
-      redirect_to goals_path, notice: 'Goal updated.'
+      redirect_to goals_path, notice: "Goal updated."
     else
       @domains = Domain.ordered
       render :edit, status: :unprocessable_content
@@ -42,14 +42,14 @@ class GoalsController < ApplicationController
 
   def destroy
     @goal.destroy
-    redirect_to goals_path, notice: 'Goal deleted.'
+    redirect_to goals_path, notice: "Goal deleted."
   end
 
   def complete
-    @goal.update(status: 'completed')
+    @goal.update(status: "completed")
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to goals_path, notice: 'Goal completed!' }
+      format.html { redirect_to goals_path, notice: "Goal completed!" }
     end
   end
 

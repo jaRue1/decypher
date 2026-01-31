@@ -20,14 +20,14 @@ class UserDomain < ApplicationRecord
     transaction do
       self.xp -= XP_PER_LEVEL
       self.level += 1
-      self.current_grade = 'D'
+      self.current_grade = "D"
       self.level_started_at = Time.current
       save!
 
       # Record achievement
       begin
         user.achievements.create!(
-          achievement_type: 'level_up',
+          achievement_type: "level_up",
           achievable: domain,
           metadata: { level: level, domain_name: domain.name },
           achieved_at: Time.current

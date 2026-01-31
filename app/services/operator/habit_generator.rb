@@ -156,30 +156,30 @@ module Operator
     def validate_habits!(data)
       errors = []
 
-      unless data['habits'].present? && data['habits'].length == 4
+      unless data["habits"].present? && data["habits"].length == 4
         errors << "Expected 4 habits, got #{data['habits']&.length || 0}"
       end
 
-      data['habits']&.each_with_index do |habit, idx|
-        errors << "Habit #{idx + 1} missing name" unless habit['name'].present?
+      data["habits"]&.each_with_index do |habit, idx|
+        errors << "Habit #{idx + 1} missing name" unless habit["name"].present?
       end
 
-      raise GenerationError, errors.join(', ') if errors.any?
+      raise GenerationError, errors.join(", ") if errors.any?
     end
 
     def create_habits!(user, domain, data)
-      data['habits'].map do |habit_data|
-        days_per_week = habit_data['target_days_per_week'] || 5
+      data["habits"].map do |habit_data|
+        days_per_week = habit_data["target_days_per_week"] || 5
         # Calculate days_per_month as days_per_week * 4, or use provided value
-        days_per_month = habit_data['target_days_per_month'] || (days_per_week * 4)
+        days_per_month = habit_data["target_days_per_month"] || (days_per_week * 4)
 
         user.habits.create!(
           domain: domain,
-          name: habit_data['name'],
+          name: habit_data["name"],
           target_days_per_week: days_per_week,
           target_days_per_month: days_per_month,
-          icon: habit_data['icon'],
-          color: habit_data['color'],
+          icon: habit_data["icon"],
+          color: habit_data["color"],
           active: true
         )
       end

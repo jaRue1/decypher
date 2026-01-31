@@ -1,0 +1,28 @@
+# Render.com Blueprint
+# https://render.com/docs/blueprint-spec
+
+databases:
+  - name: decypher-db
+    plan: starter  # $7/mo, 1GB storage
+    databaseName: decypher_production
+    user: decypher
+
+services:
+  - type: web
+    name: decypher
+    runtime: docker
+    plan: starter  # $7/mo
+    healthCheckPath: /up
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: decypher-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false  # You'll set this manually in dashboard
+      - key: ANTHROPIC_API_KEY
+        sync: false  # You'll set this manually in dashboard
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"

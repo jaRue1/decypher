@@ -13,24 +13,24 @@ class HabitsController < ApplicationController
     @habit_logs = HabitLog.joins(:habit)
                           .where(habits: { user_id: Current.user.id })
                           .where(date: @date.all_month)
-                          .index_by { |log| [log.habit_id, log.date] }
+                          .index_by { |log| [ log.habit_id, log.date ] }
 
     # Prepare weekly progress data (current week: Sun-Sat)
     @week_start = Date.current.beginning_of_week(:sunday)
     @week_dates = (@week_start..(@week_start + 6)).to_a
-    @week_labels = @week_dates.map { |d| d.strftime('%a') }
+    @week_labels = @week_dates.map { |d| d.strftime("%a") }
 
     # For bar chart: count of completed habits per day
     @week_completed = @week_dates.map do |date|
       next 0 if date > Date.current
-      @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
+      @habits.count { |h| @habit_logs[[ h.id, date ]]&.completed }
     end
 
     # For donut: total completed vs total possible this week
-    days_elapsed = [@week_dates.count { |d| d <= Date.current }, 1].max
+    days_elapsed = [ @week_dates.count { |d| d <= Date.current }, 1 ].max
     @week_total_possible = @habits.count * days_elapsed
     @week_total_completed = @week_dates.select { |d| d <= Date.current }.sum do |date|
-      @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
+      @habits.count { |h| @habit_logs[[ h.id, date ]]&.completed }
     end
     @week_percentage = @week_total_possible.positive? ? (@week_total_completed.to_f / @week_total_possible * 100).round(0) : 0
   end
@@ -52,7 +52,7 @@ class HabitsController < ApplicationController
     @habit = Current.user.habits.build(habit_params)
 
     if @habit.save
-      redirect_to habits_path, notice: 'Habit created.'
+      redirect_to habits_path, notice: "Habit created."
     else
       @domains = Domain.ordered
       render :new, status: :unprocessable_content
@@ -61,7 +61,7 @@ class HabitsController < ApplicationController
 
   def update
     if @habit.update(habit_params)
-      redirect_to habits_path, notice: 'Habit updated.'
+      redirect_to habits_path, notice: "Habit updated."
     else
       @domains = Domain.ordered
       render :edit, status: :unprocessable_content
@@ -70,7 +70,7 @@ class HabitsController < ApplicationController
 
   def destroy
     @habit.destroy
-    redirect_to habits_path, notice: 'Habit deleted.'
+    redirect_to habits_path, notice: "Habit deleted."
   end
 
   def toggle
@@ -89,7 +89,7 @@ class HabitsController < ApplicationController
 
   def archive
     @habit.update(active: false)
-    redirect_to habits_path, notice: 'Habit archived. Your history is preserved.'
+    redirect_to habits_path, notice: "Habit archived. Your history is preserved."
   end
 
   private
@@ -102,27 +102,27 @@ class HabitsController < ApplicationController
     @habit_logs = HabitLog.joins(:habit)
                           .where(habits: { user_id: Current.user.id })
                           .where(date: @date.all_month)
-                          .index_by { |log| [log.habit_id, log.date] }
+                          .index_by { |log| [ log.habit_id, log.date ] }
 
     # Weekly progress data
     @week_start = Date.current.beginning_of_week(:sunday)
     @week_dates = (@week_start..(@week_start + 6)).to_a
-    @week_labels = @week_dates.map { |d| d.strftime('%a') }
+    @week_labels = @week_dates.map { |d| d.strftime("%a") }
 
     @week_completed = @week_dates.map do |date|
       next 0 if date > Date.current
-      @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
+      @habits.count { |h| @habit_logs[[ h.id, date ]]&.completed }
     end
 
-    days_elapsed = [@week_dates.count { |d| d <= Date.current }, 1].max
+    days_elapsed = [ @week_dates.count { |d| d <= Date.current }, 1 ].max
     @week_total_possible = @habits.count * days_elapsed
     @week_total_completed = @week_dates.select { |d| d <= Date.current }.sum do |date|
-      @habits.count { |h| @habit_logs[[h.id, date]]&.completed }
+      @habits.count { |h| @habit_logs[[ h.id, date ]]&.completed }
     end
     @week_percentage = @week_total_possible.positive? ? (@week_total_completed.to_f / @week_total_possible * 100).round(0) : 0
 
     # Today's progress
-    @today_completed = @habits.count { |h| @habit_logs[[h.id, Date.current]]&.completed }
+    @today_completed = @habits.count { |h| @habit_logs[[ h.id, Date.current ]]&.completed }
     @today_percentage = @habits.any? ? (@today_completed.to_f / @habits.count * 100).round(0) : 0
   end
 

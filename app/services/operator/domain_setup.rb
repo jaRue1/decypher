@@ -26,7 +26,7 @@ module Operator
     # Apply the generated plan - create all records in a transaction
     def apply_plan!
       plan = @domain_setup.generated_plan
-      raise PlanValidationError, 'No plan generated' unless plan.present?
+      raise PlanValidationError, "No plan generated" unless plan.present?
 
       validate_plan!(plan)
 
@@ -41,7 +41,7 @@ module Operator
         create_missions!(plan)
 
         # Mark setup as completed
-        @domain_setup.advance_to!('completed')
+        @domain_setup.advance_to!("completed")
 
         user_domain
       end
@@ -58,76 +58,76 @@ module Operator
       end
 
       # Check goals count (Law of Fours)
-      if plan['goals'].present? && plan['goals'].length != 4
+      if plan["goals"].present? && plan["goals"].length != 4
         errors << "Expected 4 goals, got #{plan['goals'].length}"
       end
 
       # Check missions count
-      if plan['missions'].present?
-        unless plan['missions'].length == 4
+      if plan["missions"].present?
+        unless plan["missions"].length == 4
           errors << "Expected 4 missions, got #{plan['missions'].length}"
         end
 
         # Check grade distribution (must have D, C, B, A)
-        grades = plan['missions'].map { |m| m['grade'] }.sort
+        grades = plan["missions"].map { |m| m["grade"] }.sort
         expected_grades = %w[A B C D]
         unless grades == expected_grades
           errors << "Expected grades D, C, B, A but got #{plan['missions'].map { |m| m['grade'] }.join(', ')}"
         end
 
         # Check objectives count for each mission
-        plan['missions'].each_with_index do |mission, idx|
-          unless mission['objectives']&.length == 4
+        plan["missions"].each_with_index do |mission, idx|
+          unless mission["objectives"]&.length == 4
             errors << "Mission #{idx + 1} should have 4 objectives, got #{mission['objectives']&.length || 0}"
           end
         end
       end
 
-      raise PlanValidationError, errors.join(', ') if errors.any?
+      raise PlanValidationError, errors.join(", ") if errors.any?
     end
 
     def create_user_domain!(plan)
-      level = plan.dig('level_assessment', 'current_level') || 1
+      level = plan.dig("level_assessment", "current_level") || 1
 
       @domain_setup.user.user_domains.find_or_initialize_by(domain: @domain_setup.domain).tap do |ud|
         ud.level = level
         ud.setup_completed = true
-        ud.quiz_responses = { operator_generated: true, reasoning: plan.dig('level_assessment', 'reasoning') }.to_json
+        ud.quiz_responses = { operator_generated: true, reasoning: plan.dig("level_assessment", "reasoning") }.to_json
         ud.save!
       end
     end
 
     def create_goals!(plan)
-      plan['goals'].each do |goal_data|
+      plan["goals"].each do |goal_data|
         @domain_setup.user.goals.create!(
           domain: @domain_setup.domain,
-          content: goal_data['content'],
-          goal_type: goal_data['goal_type'],
-          timeframe: goal_data['timeframe'],
-          priority: goal_data['priority'],
-          status: 'active'
+          content: goal_data["content"],
+          goal_type: goal_data["goal_type"],
+          timeframe: goal_data["timeframe"],
+          priority: goal_data["priority"],
+          status: "active"
         )
       end
     end
 
     def create_missions!(plan)
-      plan['missions'].each do |mission_data|
+      plan["missions"].each do |mission_data|
         mission = @domain_setup.user.missions.create!(
           domain: @domain_setup.domain,
-          title: mission_data['title'],
-          description: mission_data['description'],
-          target_level: mission_data['target_level'],
-          grade: mission_data['grade'],
-          status: 'standby'
+          title: mission_data["title"],
+          description: mission_data["description"],
+          target_level: mission_data["target_level"],
+          grade: mission_data["grade"],
+          status: "standby"
         )
 
-        mission_data['objectives'].each do |obj_data|
+        mission_data["objectives"].each do |obj_data|
           mission.objectives.create!(
-            description: obj_data['description'],
-            skill_name: obj_data['skill_name'],
-            difficulty: obj_data['difficulty'],
-            position: obj_data['position'],
-            status: 'pending'
+            description: obj_data["description"],
+            skill_name: obj_data["skill_name"],
+            difficulty: obj_data["difficulty"],
+            position: obj_data["position"],
+            status: "pending"
           )
         end
       end

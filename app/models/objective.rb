@@ -13,15 +13,15 @@ class Objective < ApplicationRecord
 
   before_save :set_xp_reward
 
-  scope :pending, -> { where(status: 'pending').or(where(status: nil)) }
-  scope :active, -> { where(status: 'active') }
-  scope :completed, -> { where(status: 'completed') }
+  scope :pending, -> { where(status: "pending").or(where(status: nil)) }
+  scope :active, -> { where(status: "active") }
+  scope :completed, -> { where(status: "completed") }
 
   # Start working on the objective
   def start!
     return false if completed?
 
-    update!(status: 'active', started_at: Time.current)
+    update!(status: "active", started_at: Time.current)
   end
 
   # Complete the objective
@@ -29,7 +29,7 @@ class Objective < ApplicationRecord
     return false if completed?
 
     transaction do
-      update!(status: 'completed', completed_at: Time.current)
+      update!(status: "completed", completed_at: Time.current)
 
       # Create skill for the user
       if skill_name.present?
@@ -44,7 +44,7 @@ class Objective < ApplicationRecord
 
       # Record achievement (only if not already recorded)
       mission.user.achievements.find_or_create_by!(
-        achievement_type: 'objective_completed',
+        achievement_type: "objective_completed",
         achievable: self
       ) do |achievement|
         achievement.metadata = { description: description, xp_earned: xp_reward, skill: skill_name }
@@ -63,21 +63,21 @@ class Objective < ApplicationRecord
     return false unless completed?
 
     transaction do
-      update!(status: 'active', completed_at: nil)
+      update!(status: "active", completed_at: nil)
 
       # If mission was completed, reactivate it
-      mission.update!(status: 'active', completed_at: nil) if mission.status == 'completed'
+      mission.update!(status: "active", completed_at: nil) if mission.status == "completed"
     end
 
     true
   end
 
   def completed?
-    status == 'completed' || completed_at.present?
+    status == "completed" || completed_at.present?
   end
 
   def pending?
-    status.nil? || status == 'pending'
+    status.nil? || status == "pending"
   end
 
   # Time spent on objective

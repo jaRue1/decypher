@@ -135,7 +135,7 @@ module Operator
     end
 
     def next_mission_user_prompt(completed_mission)
-      skills_learned = completed_mission.objectives.map(&:skill_name).compact.join(', ')
+      skills_learned = completed_mission.objectives.map(&:skill_name).compact.join(", ")
 
       <<~PROMPT
         Generate the next mission for a user who just completed:
@@ -153,32 +153,32 @@ module Operator
     def validate_missions!(data)
       errors = []
 
-      unless data['missions'].present? && data['missions'].length == 4
+      unless data["missions"].present? && data["missions"].length == 4
         errors << "Expected 4 missions, got #{data['missions']&.length || 0}"
       end
 
-      data['missions']&.each_with_index do |mission, idx|
-        unless mission['objectives']&.length == 4
+      data["missions"]&.each_with_index do |mission, idx|
+        unless mission["objectives"]&.length == 4
           errors << "Mission #{idx + 1} should have 4 objectives"
         end
       end
 
-      raise GenerationError, errors.join(', ') if errors.any?
+      raise GenerationError, errors.join(", ") if errors.any?
     end
 
     def validate_single_mission!(data)
       errors = []
 
-      errors << 'Missing mission title' unless data['title'].present?
-      unless data['objectives']&.length == 4
+      errors << "Missing mission title" unless data["title"].present?
+      unless data["objectives"]&.length == 4
         errors << "Expected 4 objectives, got #{data['objectives']&.length || 0}"
       end
 
-      raise GenerationError, errors.join(', ') if errors.any?
+      raise GenerationError, errors.join(", ") if errors.any?
     end
 
     def create_missions_for_goal!(goal, data)
-      data['missions'].map do |mission_data|
+      data["missions"].map do |mission_data|
         create_mission!(goal.user, goal.domain, mission_data)
       end
     end
@@ -186,20 +186,20 @@ module Operator
     def create_mission!(user, domain, mission_data)
       mission = user.missions.create!(
         domain: domain,
-        title: mission_data['title'],
-        description: mission_data['description'],
-        target_level: mission_data['target_level'],
-        grade: mission_data['grade'],
-        status: 'standby'
+        title: mission_data["title"],
+        description: mission_data["description"],
+        target_level: mission_data["target_level"],
+        grade: mission_data["grade"],
+        status: "standby"
       )
 
-      mission_data['objectives'].each do |obj_data|
+      mission_data["objectives"].each do |obj_data|
         mission.objectives.create!(
-          description: obj_data['description'],
-          skill_name: obj_data['skill_name'],
-          difficulty: obj_data['difficulty'],
-          position: obj_data['position'],
-          status: 'pending'
+          description: obj_data["description"],
+          skill_name: obj_data["skill_name"],
+          difficulty: obj_data["difficulty"],
+          position: obj_data["position"],
+          status: "pending"
         )
       end
 

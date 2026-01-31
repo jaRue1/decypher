@@ -14,7 +14,7 @@ class Habit < ApplicationRecord
 
   def completion_rate_for_month(date = Date.current)
     start_date = date.beginning_of_month
-    end_date = [date.end_of_month, Date.current].min
+    end_date = [ date.end_of_month, Date.current ].min
     days_in_range = (end_date - start_date).to_i + 1
 
     completed_count = habit_logs.where(date: start_date..end_date, completed: true).count
@@ -62,7 +62,7 @@ class Habit < ApplicationRecord
     completed_dates.each_cons(2) do |prev_date, curr_date|
       if curr_date - prev_date == 1
         current += 1
-        max_streak = [max_streak, current].max
+        max_streak = [ max_streak, current ].max
       else
         current = 1
       end

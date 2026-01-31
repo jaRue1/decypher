@@ -15,10 +15,10 @@ module Operator
 
     def call_api(system_prompt:, user_prompt:, max_tokens: 4096)
       response = @client.messages.create(
-        model: 'claude-sonnet-4-20250514',
+        model: "claude-sonnet-4-20250514",
         max_tokens: max_tokens,
         system: system_prompt,
-        messages: [{ role: 'user', content: user_prompt }]
+        messages: [ { role: "user", content: user_prompt } ]
       )
 
       extract_content(response)
@@ -34,7 +34,7 @@ module Operator
       JSON.parse(json_content.strip)
     rescue JSON::ParserError => e
       Rails.logger.error("JSON parse error: #{e.message}, content: #{content}")
-      raise InvalidResponseError, 'Invalid response format from AI'
+      raise InvalidResponseError, "Invalid response format from AI"
     end
 
     private
@@ -44,7 +44,7 @@ module Operator
     end
 
     def extract_content(response)
-      response.content&.first&.text || ''
+      response.content&.first&.text || ""
     end
   end
 end

@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates :username,
             uniqueness: { case_sensitive: false },
             length: { minimum: 3, maximum: 30 },
-            format: { with: /\A[a-zA-Z0-9_]+\z/, message: 'can only contain letters, numbers, and underscores' },
+            format: { with: /\A[a-zA-Z0-9_]+\z/, message: "can only contain letters, numbers, and underscores" },
             allow_blank: true
   has_many :user_domains, dependent: :destroy
   has_many :domains, through: :user_domains
@@ -48,7 +48,7 @@ class User < ApplicationRecord
   # Monthly habit stats
   def monthly_habit_stats(date = Date.current)
     start_date = date.beginning_of_month
-    end_date = [date.end_of_month, Date.current].min
+    end_date = [ date.end_of_month, Date.current ].min
     days_elapsed = (end_date - start_date).to_i + 1
 
     active_habits = habits.active

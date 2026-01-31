@@ -4,11 +4,11 @@ class DailyEntriesController < ApplicationController
   def index
     @date = if params[:year] && params[:month]
               Date.new(params[:year].to_i, params[:month].to_i, 1)
-            elsif params[:date]
+    elsif params[:date]
               params[:date].to_date
-            else
+    else
               Date.current
-            end
+    end
 
     # Don't allow future months
     @date = Date.current if @date > Date.current
@@ -55,7 +55,7 @@ class DailyEntriesController < ApplicationController
                                   .where(date: week_start..week_end)
                                   .order(:date)
 
-    @trend_labels = @trend_dates.map { |d| d.strftime('%a') }
+    @trend_labels = @trend_dates.map { |d| d.strftime("%a") }
     @trend_mood_data = @trend_dates.map do |date|
       entry = @recent_entries.find { |e| e.date == date }
       entry&.mood_score
@@ -76,7 +76,7 @@ class DailyEntriesController < ApplicationController
 
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to daily_entry_path(date: @date), notice: 'Entry saved.' }
+        format.html { redirect_to daily_entry_path(date: @date), notice: "Entry saved." }
       end
     else
       # Reload data for show view
@@ -105,7 +105,7 @@ class DailyEntriesController < ApplicationController
                                   .where(date: week_start..week_end)
                                   .order(:date)
 
-    @trend_labels = @trend_dates.map { |d| d.strftime('%a') }
+    @trend_labels = @trend_dates.map { |d| d.strftime("%a") }
     @trend_mood_data = @trend_dates.map do |date|
       entry = @recent_entries.find { |e| e.date == date }
       entry&.mood_score
