@@ -45,10 +45,12 @@
     <!-- Action Buttons -->
     <div class="flex items-center gap-2">
       <% if mission.status == "standby" %>
-        <%= button_to generate_habits_mission_path(mission), method: :post,
-            class: "font-mono text-xs text-blue-400 hover:text-blue-300 px-3 py-1 border border-blue-700 rounded hover:border-blue-500 transition-colors" do %>
-          Generate Habits
-        <% end %>
+        <div data-controller="operator">
+          <%= button_to generate_habits_mission_path(mission), method: :post,
+              class: "font-mono text-xs text-blue-400 hover:text-blue-300 px-3 py-1 border border-blue-700 rounded hover:border-blue-500 transition-colors" do %>
+            Generate Habits
+          <% end %>
+        </div>
         <%= button_to commence_mission_path(mission), method: :post,
             class: "bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs px-4 py-2 rounded transition-colors" do %>
           Commence Mission

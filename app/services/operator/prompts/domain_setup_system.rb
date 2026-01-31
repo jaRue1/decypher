@@ -20,8 +20,19 @@ module Operator
           - L7-L8: Advanced - Deep expertise, can mentor others
           - L9-L10: Expert/Master - Industry leader, innovative contributor
 
+          GOAL PRIORITY & TIMEFRAME RULES:
+          Priority correlates with urgency - shorter timeframe = higher priority (needs focus NOW)
+          - short_term (1-4 weeks) → priority 1 (Critical) or 2 (High) - URGENT, immediate focus
+          - medium_term (1-3 months) → priority 2 (High) or 3 (Medium) - important but not urgent
+          - long_term (3+ months) → priority 4 (Low) or 5 (Optional) - can develop over time
+
+          Generate a MIX of timeframes:
+          - At least 1 short-term goal (Critical/High priority)
+          - At least 1-2 medium-term goals (High/Medium priority)
+          - At least 1 long-term goal (Low/Optional priority)
+
           IMPORTANT RULES - THE LAW OF FOURS:
-          - Always generate EXACTLY 4 goals
+          - Always generate EXACTLY 4 goals (with mixed timeframes as described above)
           - Always generate EXACTLY 4 missions
           - Each mission must have EXACTLY 4 objectives
           - Missions MUST have one of each grade: Grade D (first/easiest), Grade C, Grade B, Grade A (last/hardest)

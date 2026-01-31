@@ -3,7 +3,7 @@
   <div class="space-y-3">
     <% habits.sort_by { |h| -h.current_streak }.each do |habit| %>
       <div class="flex items-center justify-between">
-        <span class="font-mono text-xs text-slate-400 truncate max-w-[100px]"><%= habit.name %></span>
+        <span class="font-mono text-xs text-slate-400 truncate max-w-[150px]" title="<%= habit.name %>"><%= habit.name %></span>
         <div class="flex items-center gap-2">
           <% if habit.current_streak > 0 %>
             <span class="font-mono text-sm text-amber-400"><%= habit.current_streak %></span>

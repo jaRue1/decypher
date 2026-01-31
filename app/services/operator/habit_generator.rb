@@ -45,21 +45,30 @@ module Operator
 
         IMPORTANT RULES:
         - Generate EXACTLY 4 habits
-        - Each habit should have a clear, concise name (under 50 characters)
+        - Habit names MUST be SHORT: 2-4 words max (e.g., "Read docs", "Practice coding", "Review PRs", "Write tests")
         - Target 5 days per week (weekdays)
         - Include a mix of learning, practice, and reflection habits
+
+        TARGET FREQUENCY OPTIONS:
+        - 5 days/week = 20 days/month (weekdays)
+        - 4 days/week = 16 days/month
+        - 3 days/week = 12 days/month
+        - 2 days/week = 8 days/month
 
         OUTPUT FORMAT (JSON only):
         {
           "habits": [
             {
               "name": "<habit name - action-oriented, e.g., 'Read 20 minutes of technical docs'>",
-              "target_days_per_week": 5,
+              "target_days_per_week": <2-5>,
+              "target_days_per_month": <days_per_week * 4>,
               "icon": "<single emoji>",
               "color": "<hex color code>"
             }
           ]
         }
+
+        IMPORTANT: target_days_per_month MUST equal target_days_per_week × 4.
 
         Respond ONLY with valid JSON.
       PROMPT
@@ -97,21 +106,30 @@ module Operator
 
         IMPORTANT RULES:
         - Generate EXACTLY 4 habits
-        - Each habit should have a clear, concise name (under 50 characters)
+        - Habit names MUST be SHORT: 2-4 words max (e.g., "Read docs", "Practice coding", "Review PRs", "Write tests")
         - Target 5 days per week (weekdays)
         - Include a mix of learning, practice, and reflection habits
+
+        TARGET FREQUENCY OPTIONS:
+        - 5 days/week = 20 days/month (weekdays)
+        - 4 days/week = 16 days/month
+        - 3 days/week = 12 days/month
+        - 2 days/week = 8 days/month
 
         OUTPUT FORMAT (JSON only):
         {
           "habits": [
             {
               "name": "<habit name - action-oriented, e.g., 'Practice coding for 30 minutes'>",
-              "target_days_per_week": 5,
+              "target_days_per_week": <2-5>,
+              "target_days_per_month": <days_per_week * 4>,
               "icon": "<single emoji>",
               "color": "<hex color code>"
             }
           ]
         }
+
+        IMPORTANT: target_days_per_month MUST equal target_days_per_week × 4.
 
         Respond ONLY with valid JSON.
       PROMPT
@@ -151,10 +169,15 @@ module Operator
 
     def create_habits!(user, domain, data)
       data['habits'].map do |habit_data|
+        days_per_week = habit_data['target_days_per_week'] || 5
+        # Calculate days_per_month as days_per_week * 4, or use provided value
+        days_per_month = habit_data['target_days_per_month'] || (days_per_week * 4)
+
         user.habits.create!(
           domain: domain,
           name: habit_data['name'],
-          target_days_per_week: habit_data['target_days_per_week'] || 5,
+          target_days_per_week: days_per_week,
+          target_days_per_month: days_per_month,
           icon: habit_data['icon'],
           color: habit_data['color'],
           active: true
