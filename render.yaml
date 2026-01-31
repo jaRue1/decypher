@@ -3,7 +3,7 @@
 
 databases:
   - name: decypher-db
-    plan: basic  # New Render plan naming
+    plan: basic-256mb
     databaseName: decypher_production
     user: decypher
 
@@ -11,7 +11,7 @@ services:
   - type: web
     name: decypher
     runtime: docker
-    plan: basic
+    plan: starter
     healthCheckPath: /up
     envVars:
       - key: DATABASE_URL
