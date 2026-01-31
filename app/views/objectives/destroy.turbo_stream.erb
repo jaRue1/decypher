@@ -1,1 +1,5 @@
 <%= turbo_stream.remove dom_id(@objective) %>
+
+<%= turbo_stream.replace "mission_header" do %>
+  <%= render partial: "missions/mission_header", locals: { mission: @mission.reload } %>
+<% end %>
